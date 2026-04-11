@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('level_id');
             $table->string('user_nama', 100)->unique();
             $table->string('nama', 1000);
+            $table->string('password', 255);
             $table->timestamps();
 
 
