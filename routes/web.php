@@ -26,7 +26,7 @@ Route::prefix('productpage')->group( function() {
 
 
 
-Route::get('/User', [UserPage::class,  'index']);
+Route::get('/user', [UserPage::class,  'index']);
 
 Route::get('/user/{id}/name/{name}' ,[UserPage::class, 'show']);
 
@@ -38,3 +38,5 @@ Route::get('/transaction', [Transaction::class,  'index']);
 Route::get('/level',[levelcontroller::class, 'index']);
 
 Route::get('/kategori' , [kategoricontroller::class, 'index']);
+
+

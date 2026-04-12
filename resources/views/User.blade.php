@@ -7,8 +7,21 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>User Information</h1>
-    <h1>id user: {{ $id }}</h1>
-    <h1>name user: {{ $name }}</h1>
+    <table border="1" collpadding='2' collspasing='0'>
+        <tr>
+            <th>ID</th>
+            <th>USERNAME</th>
+            <th>NAMA</th>
+            <th>ID LEVEL PENGGUNA</th>
+        </tr>
+        @foreach ($data as $data)
+            <tr>
+                <td>{{$data->user_id}}</td>
+                <td>{{$data->user_nama}}</td>
+                <td>{{$data->nama}}</td>
+                <td>{{$data->level_id}}</td>
+            </tr>
+        @endforeach
+    </table>
 </body>
 </html>
