@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomePage;
+use App\Http\Controllers\kategoricontroller;
 use App\Http\Controllers\levelcontroller;
 use App\Http\Controllers\Product;
 use App\Http\Controllers\ProductPage;
@@ -32,6 +33,8 @@ Route::get('/user/{id}/name/{name}' ,[UserPage::class, 'show']);
 Route::get('/transaction', [Transaction::class,  'index']);
 
 
-// db deface 
+// db deface query builder
 
 Route::get('/level',[levelcontroller::class, 'index']);
+
+Route::get('/kategori' , [kategoricontroller::class, 'index']);
