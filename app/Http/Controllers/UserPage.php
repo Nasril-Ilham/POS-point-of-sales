@@ -10,27 +10,39 @@ class UserPage extends Controller
 {
     public function index(){
     
-    // menambhakan data 
-    $data =[
-        'user_nama' => 'customer-1',
-        'nama' => 'pelanggan',
-        'password' => Hash::make('1234'),
-        'level_id' => 3,
-    ];
+    // // menambhakan data 
+    // $data =[
+    //     'user_nama' => 'customer-1',
+    //     'nama' => 'pelanggan',
+    //     'password' => Hash::make('1234'),
+    //     'level_id' => 3,
+    // ];
 
-    usermodel::insert($data);
+    // usermodel::insert($data);
 
-    // update data 
+    // // update data 
+    // $data = [
+    //     'nama' => 'pelanggan pertama'
+    // ];
+
+    // usermodel::where('user_nama', 'customer-1')->update($data);
+
+   
+    
+
+    // menambahkan data 
+
     $data = [
-        'nama' => 'pelanggan pertama'
+        'level_id' => 2,
+        'user_nama' => 'manager tiga',
+        'nama' => 'manager 3',
+        'password' => Hash::make('234856')
     ];
+    usermodel::create($data);
 
-    usermodel::where('user_nama', 'customer-1')->update($data);
-
-    // akses semua data 
+     // akses semua data 
        $user = usermodel::all();
         return view('User', ['data' => $user]);
-    }
+}
 
-    
 }
