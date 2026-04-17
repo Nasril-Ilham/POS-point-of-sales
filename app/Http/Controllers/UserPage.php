@@ -50,10 +50,17 @@ class UserPage extends Controller
 
 
    // firstOrfail : jika tidak ada maka akan terlempar ke not found page 
-   $user = usermodel::where('user_nama','manager9')->firstOrFail();
+  //  $user = usermodel::where('user_nama','manager')->firstOrFail();
+  //  return view('User' , ['data' => $user]);
+
+
+  //belajar sum count max
+  // ->sum
+  // ->count
+  // ->max
+
+  $user = usermodel::where('level_id',2)->count();
    return view('User' , ['data' => $user]);
 }
-
-
 
 }

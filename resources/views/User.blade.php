@@ -9,17 +9,12 @@
 <body>
     <table border="1" collpadding='2' collspasing='0'>
         <tr>
-            <th>ID</th>
-            <th>USERNAME</th>
-            <th>NAMA</th>
-            <th>ID LEVEL PENGGUNA</th>
+            <th>jumlah data</th>
         </tr>
         
             <tr>
-                <td>{{$data->user_id}}</td>
-                <td>{{$data->user_nama}}</td>
-                <td>{{$data->nama}}</td>
-                <td>{{$data->level_id}}</td>
+                
+                <td>{{$data}}</td>
             </tr>
         
     </table>
