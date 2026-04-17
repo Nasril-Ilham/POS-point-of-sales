@@ -27,22 +27,33 @@ class UserPage extends Controller
 
     // usermodel::where('user_nama', 'customer-1')->update($data);
 
-   
     
 
     // menambahkan data 
 
-    $data = [
-        'level_id' => 2,
-        'user_nama' => 'manager tiga',
-        'nama' => 'manager 3',
-        'password' => Hash::make('234856')
-    ];
-    usermodel::create($data);
+    // $data = [
+    //     'level_id' => 2,
+    //     'user_nama' => 'manager tiga',
+    //     'nama' => 'manager 3',
+    //     'password' => Hash::make('234856')
+    // ];
+    // usermodel::create($data);
 
-     // akses semua data 
-       $user = usermodel::all();
-        return view('User', ['data' => $user]);
+    //  // akses semua data 
+    //    $user = usermodel::all();
+    //     return view('User', ['data' => $user]);
+
+
+     // mengambil satu objek atau data 
+  //  $user = usermodel::find(1);
+  //  return view('User' , ['data' => $user]);
+
+
+   // firstOrfail : jika tidak ada maka akan terlempar ke not found page 
+   $user = usermodel::where('user_nama','manager9')->firstOrFail();
+   return view('User' , ['data' => $user]);
 }
+
+
 
 }
