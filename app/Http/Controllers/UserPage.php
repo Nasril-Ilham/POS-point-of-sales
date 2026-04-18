@@ -10,51 +10,54 @@ class UserPage extends Controller
 {
     public function index(){
 
-    // firstorcrate : mengambil dari dtabase jika tidak ada di databse maka akan membuat baru 
-
-    // mengambil data atau membuat jika tidak ada 
-    $user = usermodel::firstOrCreate(
+    $user = usermodel::Create(
       [
-         'user_nama' => 'manager',
-         'nama' => 'manager',
-      ]
-    );
-
-    $user = usermodel::firstOrCreate(
-      [
-         'user_nama' => 'manager2',
-         'nama' => 'manager dua dua',
-         'password' => Hash::make('12345'),
-         'level_id' => 2 ,
-      ]
-    );
-
-    // tanpa save() tidak akan ke simppan dalam sql
-      $user = usermodel::firstOrNew(
-      [
-        'user_nama' => 'manager33',
-        'nama' => 'managertiga tiga tiga',
+        'user_nama' => 'manager45',
+        'nama' => 'managerempat',
         'password' => hash::make('123456'),
         'level_id' => 2
       ]
     );
 
+    $user->user_nama = 'manager46';
 
-    $user = usermodel::firstOrNew(
-      [
-        'user_nama' => 'manager33',
-        'nama' => 'managertiga tiga tiga',
-        'password' => hash::make('123456'),
-        'level_id' => 2
-      ]
-    );
-    $user->save();
+$user->isDirty(); // true
+$user->isDirty('user_nama'); // true
+$user->isDirty('nama'); // false
+$user->isDirty(['nama', 'user_nama']); // true
 
-    return view('user', ['data' => $user]);
+$user->isClean(); // false
+$user->isClean('user_nama'); // false
+$user->isClean('nama'); // true
+$user->isClean(['nama', 'user_nama']); // false
+
+$user->save();
+
+$user->isDirty(); // false
+$user->isClean(); // true
+dd($user->isDyrty());
+
+
+        $user = UserModel::create([
+            'user_nama' => 'manager11',
+            'nama' => 'Manager11',
+            'password' => Hash::make('12345'),
+            'level_id' => 2,
+        ]);
+
+        // ubah data
+        $user->user_nama = 'manager12';
+
+        // simpan perubahan
+        $user->save();
+
+        // cek perubahan setelah save
+        $user->wasChanged(); // true
+        $user->wasChanged('user_nama'); // true
+        $user->wasChanged(['user_nama', 'level_id']); // true
+        $user->wasChanged('nama'); // false
+        $user->wasChanged(['nama', 'user_nama']); // true
+    
+
     }
-
 }
-
-// noted
-// untuk firstorcreate tidak perlu save() agar bisa di kesimpin dalam sql
-// sedangkan untuk firstornew perlu menggunakan save() untuk agar tersimpan dalam sql
