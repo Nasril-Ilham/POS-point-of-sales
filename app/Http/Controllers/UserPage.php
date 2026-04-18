@@ -9,58 +9,52 @@ use Illuminate\Support\Facades\Hash;
 class UserPage extends Controller
 {
     public function index(){
-    
-    // // menambhakan data 
-    // $data =[
-    //     'user_nama' => 'customer-1',
-    //     'nama' => 'pelanggan',
-    //     'password' => Hash::make('1234'),
-    //     'level_id' => 3,
-    // ];
 
-    // usermodel::insert($data);
+    // firstorcrate : mengambil dari dtabase jika tidak ada di databse maka akan membuat baru 
 
-    // // update data 
-    // $data = [
-    //     'nama' => 'pelanggan pertama'
-    // ];
+    // mengambil data atau membuat jika tidak ada 
+    $user = usermodel::firstOrCreate(
+      [
+         'user_nama' => 'manager',
+         'nama' => 'manager',
+      ]
+    );
 
-    // usermodel::where('user_nama', 'customer-1')->update($data);
+    $user = usermodel::firstOrCreate(
+      [
+         'user_nama' => 'manager2',
+         'nama' => 'manager dua dua',
+         'password' => Hash::make('12345'),
+         'level_id' => 2 ,
+      ]
+    );
 
-    
-
-    // menambahkan data 
-
-    // $data = [
-    //     'level_id' => 2,
-    //     'user_nama' => 'manager tiga',
-    //     'nama' => 'manager 3',
-    //     'password' => Hash::make('234856')
-    // ];
-    // usermodel::create($data);
-
-    //  // akses semua data 
-    //    $user = usermodel::all();
-    //     return view('User', ['data' => $user]);
+    // tanpa save() tidak akan ke simppan dalam sql
+      $user = usermodel::firstOrNew(
+      [
+        'user_nama' => 'manager33',
+        'nama' => 'managertiga tiga tiga',
+        'password' => hash::make('123456'),
+        'level_id' => 2
+      ]
+    );
 
 
-     // mengambil satu objek atau data 
-  //  $user = usermodel::find(1);
-  //  return view('User' , ['data' => $user]);
+    $user = usermodel::firstOrNew(
+      [
+        'user_nama' => 'manager33',
+        'nama' => 'managertiga tiga tiga',
+        'password' => hash::make('123456'),
+        'level_id' => 2
+      ]
+    );
+    $user->save();
 
-
-   // firstOrfail : jika tidak ada maka akan terlempar ke not found page 
-  //  $user = usermodel::where('user_nama','manager')->firstOrFail();
-  //  return view('User' , ['data' => $user]);
-
-
-  //belajar sum count max
-  // ->sum
-  // ->count
-  // ->max
-
-  $user = usermodel::where('level_id',2)->count();
-   return view('User' , ['data' => $user]);
-}
+    return view('user', ['data' => $user]);
+    }
 
 }
+
+// noted
+// untuk firstorcreate tidak perlu save() agar bisa di kesimpin dalam sql
+// sedangkan untuk firstornew perlu menggunakan save() untuk agar tersimpan dalam sql

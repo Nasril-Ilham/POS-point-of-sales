@@ -16,6 +16,6 @@ class usermodel extends Model
     
     // $fillabe untuk data yang bisa di rubah seperti di tambahkan atau di update 
 
-    protected $fillable = ['level_id','user_nama', 'nama'];
+    protected $fillable = ['level_id','user_nama', 'nama', 'password'];
 
 }
