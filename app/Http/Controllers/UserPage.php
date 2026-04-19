@@ -10,9 +10,8 @@ class UserPage extends Controller
 {
     public function index(){
 
-    $user = usermodel::all();
-    
-    return view('user', ['data' => $user]);
+   $user = usermodel::with('level')->get();
+    return view('/user' , ['data' => $user]);
 
     }
 
