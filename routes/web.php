@@ -27,6 +27,14 @@ Route::prefix('productpage')->group( function() {
 
 
 Route::get('/user', [UserPage::class,  'index']);
+Route::get('/user/tambah', [UserPage::class, 'tambah']);
+Route::post('/user/tambah_simpan', [UserPage::class, 'tambah_simpan']);
+Route::get('/user/ubah/{id}', [UserPage::class, 'ubah']);
+Route::put('/user/ubah_simpan/{id}', [UserPage::class, 'change']);
+Route::get('/user/delete/{id}' , [UserPage::class, 'delete']);
+
+
+
 
 Route::get('/user/{id}/name/{name}' ,[UserPage::class, 'show']);
 

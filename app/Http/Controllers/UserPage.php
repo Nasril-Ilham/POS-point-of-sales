@@ -10,54 +10,54 @@ class UserPage extends Controller
 {
     public function index(){
 
-    $user = usermodel::Create(
-      [
-        'user_nama' => 'manager45',
-        'nama' => 'managerempat',
-        'password' => hash::make('123456'),
-        'level_id' => 2
-      ]
-    );
-
-    $user->user_nama = 'manager46';
-
-$user->isDirty(); // true
-$user->isDirty('user_nama'); // true
-$user->isDirty('nama'); // false
-$user->isDirty(['nama', 'user_nama']); // true
-
-$user->isClean(); // false
-$user->isClean('user_nama'); // false
-$user->isClean('nama'); // true
-$user->isClean(['nama', 'user_nama']); // false
-
-$user->save();
-
-$user->isDirty(); // false
-$user->isClean(); // true
-dd($user->isDyrty());
-
-
-        $user = UserModel::create([
-            'user_nama' => 'manager11',
-            'nama' => 'Manager11',
-            'password' => Hash::make('12345'),
-            'level_id' => 2,
-        ]);
-
-        // ubah data
-        $user->user_nama = 'manager12';
-
-        // simpan perubahan
-        $user->save();
-
-        // cek perubahan setelah save
-        $user->wasChanged(); // true
-        $user->wasChanged('user_nama'); // true
-        $user->wasChanged(['user_nama', 'level_id']); // true
-        $user->wasChanged('nama'); // false
-        $user->wasChanged(['nama', 'user_nama']); // true
+    $user = usermodel::all();
     
+    return view('user', ['data' => $user]);
 
+    }
+
+    public function tambah(){
+
+    return view('user_tambah');
+    }
+
+    public function tambah_simpan(Request $request){
+
+          usermodel::create([
+           'user_nama' => $request->user_nama,
+           'nama' => $request->nama,
+           'password' => Hash::make($request->password),
+           'level_id' => $request->level_id
+          ]);
+
+          return redirect('/user');
+    }
+
+    public function ubah($id){
+      $user = usermodel::find($id);
+      return view('user_ubah', ["data" => $user]);
+    }
+
+
+    public function change(Request $request, $id){
+     $user = usermodel::find($id);
+
+     $user->user_nama = $request->user_nama;
+     $user->nama = $request->nama;
+     $user->password = hash::make($request->password);
+     $user->level_id = $request->level_id;
+
+     $user->save();
+
+     return redirect('/user');
+
+    }
+
+    public function delete($id){
+
+     $user= usermodel::find($id);
+     $user->delete();
+
+     return redirect('/user');
     }
 }
