@@ -7,6 +7,7 @@ use App\Http\Controllers\Product;
 use App\Http\Controllers\ProductPage;
 use App\Http\Controllers\Transaction;
 use App\Http\Controllers\UserPage;
+use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -46,5 +47,7 @@ Route::get('/transaction', [Transaction::class,  'index']);
 Route::get('/level',[levelcontroller::class, 'index']);
 
 Route::get('/kategori' , [kategoricontroller::class, 'index']);
+
+Route::get('/', [WelcomeController::class, 'index']);
 
 

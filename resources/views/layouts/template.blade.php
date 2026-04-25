@@ -42,7 +42,7 @@
     <!-- Main content -->
     <section class="content">
 
-   @yield('content')
+   @yield('content ')
 
     </section>
     <!-- /.content -->
@@ -50,7 +50,7 @@
   <!-- /.content-wrapper -->
 
   {{-- footer --}}
-  @include(layouts.footer)
+  @include('layouts.footer')
   {{-- footer --}}
 
   <!-- Control Sidebar -->
@@ -64,7 +64,7 @@
 <!-- jQuery -->
 <script src="{{asset('adminLTE/plugins/jquery/jquery.min.js')}}"></script>
 <!-- Bootstrap 4 -->
-<script src="{{asset('adminLTE/'plugins/bootstrap/js/bootstrap.bundle.min.js)}}"></script>
+<script src="{{asset('adminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('adminLTE/dist/js/adminlte.min.js')}}"></script>
 <!-- AdminLTE for demo purposes -->
