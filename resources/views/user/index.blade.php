@@ -26,6 +26,24 @@
                 </button>
             </div>
         @endif
+        <div class="row">
+    <div class="col-md-12">
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Filter:</label>
+            <div class="col-sm-4">
+                <select class="form-control" id="level_id" name="level_id">
+                    <option value="">- Semua -</option>
+                    @foreach($levels as $item)
+                        <option value="{{ $item->level_id }}" {{ (isset($selected_id) && $selected_id == $item->level_id) ? 'selected' : '' }}>
+                            {{ $item->level_nama }}
+                        </option>
+                    @endforeach
+                </select>
+                <small class="form-text text-muted">Level Pengguna</small>
+            </div>
+        </div>
+    </div>
+</div>
 
         <table class="table table-bordered table-striped table-hover table-sm" id="table_user">
             <thead>
@@ -54,6 +72,9 @@
                 "url": "{{ url('user/list') }}",
                 "dataType": "json",
                 "type": "POST",
+                "data": function(d) {
+                    d.level_id = $('#level_id').val(); // Mengirim data filter level_id
+                },
                 "headers": {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}' // Penting untuk method POST di Laravel
                 }
@@ -93,6 +114,11 @@
                 }
             ]
         });
+
+        $('#level_id').change(function() {
+            dataUser.ajax.reload(); // Reload data ketika filter berubah
+        });
+        
     });
 </script>
 @endpush

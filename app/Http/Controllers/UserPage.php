@@ -22,8 +22,9 @@ $page = (object) [
 ];
 
 $activemenu = 'user';
+$levels = levelmodel::all();
 
-  return view('user.index', ['breadcrum' => $breadcrum, 'page' => $page, 'activemenu' => $activemenu]);
+  return view('user.index', ['breadcrum' => $breadcrum, 'page' => $page, 'activemenu' => $activemenu, 'levels' => $levels]);
     
  }
 
@@ -31,6 +32,11 @@ public function list(Request $request)
 {
     $user = usermodel::select('user_id', 'user_nama', 'nama', 'level_id')
         ->with('level');
+
+    // Jika ada filter level_id, tambahkan kondisi where
+    if($request->level_id){
+        $user->where('level_id', $request->level_id);
+    }
 
     return DataTables::of($user)
         ->addIndexColumn()
