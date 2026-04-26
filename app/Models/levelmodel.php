@@ -3,16 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class levelmodel extends Model
 {
 
-// public function ini mengarah pada ke usermodel karna tabel user terhubung dengan usermodel
+// Level has many users
 protected $table = 'm_level';
 protected $primaryKey = 'level_id';
-   public function user(): BelongsTo
+protected $fillable = ['level_kode', 'level_nama'];
+   public function users(): HasMany
    {
-    return $this->belongTo(usermodel::class);
+    return $this->hasMany(usermodel::class, 'level_id', 'level_id');
    }
 }

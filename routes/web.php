@@ -10,9 +10,6 @@ use App\Http\Controllers\UserPage;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::get('/Homepage', [HomePage::class,  'index']);
 
@@ -26,21 +23,23 @@ Route::prefix('productpage')->group( function() {
 });
 
 
+Route::group(['prefix' => 'user'], function() {
+    Route::post('/list', [UserPage::class,  'list']);
+    Route::get('/', [UserPage::class,  'index']);
+    Route::get('/list-test', [UserPage::class,  'listTest']);
+    Route::get('/create', [UserPage::class,  'create']);
+    Route::post('/', [UserPage::class,  'store']);
+    Route::get('/{id}', [UserPage::class,  'show']);
+    Route::get('/{id}/edit', [UserPage::class,  'edit']);
+    Route::put('/{id}', [UserPage::class,  'update']);
+    Route::delete('/{id}', [UserPage::class,  'destroy']);
+});
 
-Route::get('/user', [UserPage::class,  'index']);
-Route::get('/user/tambah', [UserPage::class, 'tambah']);
-Route::post('/user/tambah_simpan', [UserPage::class, 'tambah_simpan']);
-Route::get('/user/ubah/{id}', [UserPage::class, 'ubah']);
-Route::put('/user/ubah_simpan/{id}', [UserPage::class, 'change']);
-Route::get('/user/delete/{id}' , [UserPage::class, 'delete']);
 
 
 
-
-Route::get('/user/{id}/name/{name}' ,[UserPage::class, 'show']);
 
 Route::get('/transaction', [Transaction::class,  'index']);
-
 
 // db deface query builder
 

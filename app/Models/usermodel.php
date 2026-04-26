@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use App\Http\Controllers\levelcontroller;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class usermodel extends Model
 {
@@ -13,6 +12,7 @@ class usermodel extends Model
 
     protected $table ='m_user';
     protected $primaryKey = 'user_id';
+    public $timestamps = true;
 
     //
     
@@ -20,12 +20,12 @@ class usermodel extends Model
 
     protected $fillable = ['level_id','user_nama', 'nama', 'password'];
 
-    //one to one relationship
+    // User belongs to Level
     //
 
-    public function level(): HasOne
+    public function level(): BelongsTo
     {
-        return $this->hasone(levelmodel::class, 'level_id', 'level_id');
+        return $this->belongsTo(levelmodel::class, 'level_id', 'level_id');
     }
 
 }
