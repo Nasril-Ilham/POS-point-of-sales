@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\baragController;
 use App\Http\Controllers\HomePage;
 use App\Http\Controllers\kategoricontroller;
 use App\Http\Controllers\levelcontroller;
@@ -11,17 +12,7 @@ use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/Homepage', [HomePage::class,  'index']);
-
-Route::get('/product', [Product::class,  'index']);
-
-Route::prefix('productpage')->group( function() {
-      Route::get('/category/food-beverage', [Product::class,  'index']);
-      Route::get('/category/beauty-health', [Product::class,  'index']);
-      Route::get('/category/home-care', [Product::class,  'index']);
-      Route::get('/category/baby-kids', [Product::class,  'index']);
-});
-
+Route::get('/', [WelcomeController::class, 'index']);
 
 Route::group(['prefix' => 'user'], function() {
     Route::post('/list', [UserPage::class,  'list']);
@@ -35,18 +26,41 @@ Route::group(['prefix' => 'user'], function() {
     Route::delete('/{id}', [UserPage::class,  'destroy']);
 });
 
+route::group(['prefix' => 'level'], function() {
+    Route::post('/list', [levelcontroller::class,  'list']);
+    Route::get('/', [levelcontroller::class,  'index']);
+    Route::get('/create', [levelcontroller::class,  'create']);
+    Route::post('/', [levelcontroller::class,  'store']);
+    Route::get('/{id}', [levelcontroller::class,  'show']);
+    Route::get('/{id}/edit', [levelcontroller::class,  'edit']);
+    Route::put('/{id}', [levelcontroller::class,  'update']);
+    Route::delete('/{id}', [levelcontroller::class,  'destroy']);
+});
+
+
+Route::group(['prefix' => 'barang'], function(){
+    Route::get('/', [baragController::class,  'index']);
+    Route::post('/list', [baragController::class,  'list']);
+    Route::get('/create', [baragController::class,  'create']);
+    Route::post('/', [baragController::class,  'store']);
+    Route::get('/{id}', [baragController::class,  'show']);
+    Route::get('/{id}/edit', [baragController::class,  'edit']);
+    Route::put('/{id}', [baragController::class,  'update']);
+    Route::delete('/{id}', [baragController::class,  'destroy']);
+});
 
 
 
+Route::group(['prefix' => 'kategori'], function(){
+    Route::get('/', [kategoricontroller::class,  'index']);
+    Route::post('/list', [kategoricontroller::class,  'list']);
+    Route::get('/create', [kategoricontroller::class,  'create']);
+    Route::post('/', [kategoricontroller::class,  'store']);
+    Route::get('/{id}', [kategoricontroller::class,  'show']);
+    Route::get('/{id}/edit', [kategoricontroller::class,  'edit']);
+    Route::put('/{id}', [kategoricontroller::class,  'update']);
+    Route::delete('/{id}', [kategoricontroller::class,  'destroy']);
+});
 
-Route::get('/transaction', [Transaction::class,  'index']);
-
-// db deface query builder
-
-Route::get('/level',[levelcontroller::class, 'index']);
-
-Route::get('/kategori' , [kategoricontroller::class, 'index']);
-
-Route::get('/', [WelcomeController::class, 'index']);
 
 

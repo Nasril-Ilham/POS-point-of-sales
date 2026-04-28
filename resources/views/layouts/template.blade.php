@@ -23,6 +23,17 @@
 
   {{-- Stack CSS UNTUK MEMANGIL CUSTOM CSS --}}
   @stack('css')
+
+  <style>
+    html, body {
+      height: 100%;
+    }
+    
+    .main-sidebar {
+      min-height: calc(100vh - 56px);
+      overflow-y: auto;
+    }
+  </style>
 </head>
 <body class="hold-transition sidebar-mini">
 <!-- Site wrapper -->
