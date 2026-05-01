@@ -5,12 +5,9 @@
     <div class="card-header">
         <h3 class="card-title">{{ $page->title }}</h3>
         <div class="card-tools">
-            <a class="btn btn-sm btn-primary mt-1" href="{{ url('user/create') }}">
+            <a class="btn btn-sm btn-primary mt-1" href="{{ url('stok/create') }}">
                 <i class="fas fa-plus"></i> Tambah
             </a>
-            <button onclick="modelAction('{{ url('user/create_ajax') }}')" class="btn btn-sm btn-info mt-1">
-                <i class="fas fa-plus"></i> Tambah (Ajax)
-            </button>
         </div>
     </div>
     <div class="card-body">
@@ -29,42 +26,41 @@
                 </button>
             </div>
         @endif
+
         <div class="row">
-    <div class="col-md-12">
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label">Filter:</label>
-            <div class="col-sm-4">
-                <select class="form-control" id="level_id" name="level_id">
-                    <option value="">- Semua -</option>
-                    @foreach($levels as $item)
-                        <option value="{{ $item->level_id }}" {{ (isset($selected_id) && $selected_id == $item->level_id) ? 'selected' : '' }}>
-                            {{ $item->level_nama }}
-                        </option>
-                    @endforeach
-                </select>
-                <small class="form-text text-muted">Level Pengguna</small>
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Filter:</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" id="kategori_id" name="kategori_id">
+                            <option value="">- Semua Kategori -</option>
+                            @foreach($kategori as $item)
+                                <option value="{{ $item->kategori_id }}">
+                                    {{ $item->kategori_nama }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <small class="form-text text-muted">Kategori</small>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
-        <table class="table table-bordered table-striped table-hover table-sm" id="table_user">
+        <table class="table table-bordered table-striped table-hover table-sm" id="table_stok">
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Username</th>
-                    <th>Nama</th>
-                    <th>Level Pengguna</th>
+                    <th>Supplier</th>
+                    <th>Kategori</th>
+                    <th>User</th>
+                    <th>Tanggal Stok</th>
+                    <th>Jumlah</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
         </table>
     </div>
 </div>
-
-<div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" data-
-backdrop="static" data-keyboard="false" data-width="75%" aria-hidden="true"></div>
-
 @endsection
 
 @push('css')
@@ -72,51 +68,56 @@ backdrop="static" data-keyboard="false" data-width="75%" aria-hidden="true"></di
 
 @push('js')
 <script>
-    function modelAction(url) {
-        $('#myModal').load(url, function() {
-            $(this).modal('show');
-        });
-    }
     $(document).ready(function() {
-        window.dataUser = $('#table_user').DataTable({
-            serverSide: true, // Menggunakan server side processing
+        var dataStok = $('#table_stok').DataTable({
+            serverSide: true,
             ajax: {
-                "url": "{{ url('user/list') }}",
+                "url": "{{ url('stok/list') }}",
                 "dataType": "json",
                 "type": "POST",
                 "data": function(d) {
-                    d.level_id = $('#level_id').val(); // Mengirim data filter level_id
+                    d.kategori_id = $('#kategori_id').val();
                 },
                 "headers": {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Penting untuk method POST di Laravel
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 }
             },
             columns: [
                 {
-                    // Nomor urut dari laravel datatable addIndexColumn()
                     data: "DT_RowIndex",
                     className: "text-center",
                     orderable: false,
                     searchable: false
                 },
                 {
-                    data: "user_nama",
+                    data: "supplier",
                     className: "",
                     orderable: true,
                     searchable: true
                 },
                 {
-                    data: "nama",
+                    data: "kategori",
                     className: "",
                     orderable: true,
                     searchable: true
                 },
                 {
-                    // Mengambil data level hasil dari ORM berelasi
-                    data: "level.level_nama",
+                    data: "user",
                     className: "",
-                    orderable: false,
-                    searchable: false
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "stok_tanggal",
+                    className: "",
+                    orderable: true,
+                    searchable: true
+                },
+                {
+                    data: "stok_jumlah",
+                    className: "text-right",
+                    orderable: true,
+                    searchable: true
                 },
                 {
                     data: "aksi",
@@ -127,10 +128,9 @@ backdrop="static" data-keyboard="false" data-width="75%" aria-hidden="true"></di
             ]
         });
 
-        $('#level_id').change(function() {
-            dataUser.ajax.reload(); // Reload data ketika filter berubah
+        $('#kategori_id').change(function() {
+            dataStok.ajax.reload();
         });
-        
     });
 </script>
 @endpush

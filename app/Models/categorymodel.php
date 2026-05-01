@@ -14,5 +14,10 @@ class categorymodel extends Model
     {
         return $this->hasMany(barangmodel::class, 'kategori_id', 'kategori_id');
     }
+
+    public function stok()
+    {
+        return $this->hasMany(stockmodel::class, 'kategori_id', 'kategori_id');
+    }
 }
 

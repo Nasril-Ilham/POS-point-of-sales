@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\usermodel;
 use App\Models\levelmodel;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Nette\Schema\Message;
+use Psy\Readline\Interactive\Input\Buffer;
 use Yajra\DataTables\DataTables;
 
 class UserPage extends Controller
@@ -41,16 +44,22 @@ public function list(Request $request)
     return DataTables::of($user)
         ->addIndexColumn()
         ->addColumn('aksi', function($user){
-            $btn  = '<a href="'.url('/user/'.$user->user_id).'" class="btn btn-sm btn-info">Detail</a> ';
-            $btn .= '<a href="'.url('/user/'.$user->user_id.'/edit').'" class="btn btn-sm btn-primary">Edit</a> ';
-            $btn .= '<form action="'.url('/user/'.$user->user_id).'" method="POST" style="display:inline-block;">
-                        ' . csrf_field() . ' ' . method_field('DELETE') . '
-                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm(\'Yakin hapus?\')">Hapus</button>
-                     </form>';
+            // $btn  = '<a href="'.url('/user/'.$user->user_id).'" class="btn btn-sm btn-info">Detail</a> ';
+            // $btn .= '<a href="'.url('/user/'.$user->user_id.'/edit').'" class="btn btn-sm btn-primary">Edit</a> ';
+            // $btn .= '<form action="'.url('/user/'.$user->user_id).'" method="POST" style="display:inline-block;">
+            //             ' . csrf_field() . ' ' . method_field('DELETE') . '
+            //             <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm(\'Yakin hapus?\')">Hapus</button>
+            //          </form>';
+            $btn = '<button onclick="modelAction(\''.url('/user/'.$user->user_id.'/show_ajax').'\')" class="btn btn-sm btn-primary">Detail</button> ';
+            $btn .= '<button onclick="modelAction(\''.url('/user/'.$user->user_id.'/edit_ajax').'\')" class="btn btn-sm btn-info">Edit</button> ';
+            $btn .= '<button onclick="modelAction(\''.url('/user/'.$user->user_id.'/delete_ajax').'\')" class="btn btn-sm btn-danger">Hapus</button>';
+
             return $btn;
         })
         ->rawColumns(['aksi'])
         ->toJson(); // 🔥 WAJIB
+        // toJson() untuk mengubah data yang diambil dari database menjadi format JSON yang bisa di proses oleh DataTables
+        // di sisi client untuk menampilkan data yang sudah di ambil dari database ke dalam tabel yang sudah di buat di view user.index
 }
 
  public function create()
@@ -152,4 +161,97 @@ $activemenu = 'user';
             return redirect('/user')->with('error', 'Data user tidak bisa dihapus karena memiliki transaksi');
         }
     }
+
+    public function createAjax()
+    {
+        $levels = levelmodel::select('level_id', 'level_nama')->get();
+        return view('user.create_ajax')->with('levels', $levels);
+    }
+
+    public function storeAjax(Request $request)
+    {
+       if($request->ajax() || $request->wantsJson()){
+           $rules = [
+                'user_nama' => 'required|string|min:3|unique:m_user,user_nama',
+                'nama' => 'required|string|max:100',
+                'password' => 'required|string|min:6',
+                'level_id' => 'required|integer'
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if($validator->fails()){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi gagal',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+
+            usermodel::create([
+                'user_nama' => $request->user_nama,
+                'nama' => $request->nama,
+                'password' => Hash::make($request->password),
+                'level_id' => $request->level_id
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Data user berhasil ditambahkan'
+            ]);
+        }
+        return redirect ('/');
+    }
+
+    public function editAjax(string $id)
+    {
+        $user = usermodel::findOrFail($id);
+        $levels = levelmodel::select('level_id', 'level_nama')->get();
+        return view('user.edit_ajax')->with(['user' => $user, 'levels' => $levels]);
+    }
+
+    public function updateAjax(Request $request, string $id)
+    {
+        if($request->ajax() || $request->wantsJson()){
+            $rules = [
+                'user_nama' => 'required|string|min:3|unique:m_user,user_nama,'.$id.',user_id',
+                'nama' => 'required|string|max:100',
+                'password' => 'nullable|string|min:6',
+                'level_id' => 'required|integer'
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if($validator->fails()){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi gagal',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+
+            $user = usermodel::findOrFail($id);
+            $user->user_nama = $request->user_nama;
+            $user->nama = $request->nama;
+            $user->level_id = $request->level_id;
+            if($request->password){
+                $user->password = Hash::make($request->password);
+            }
+            $user->save();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data user berhasil diupdate'
+            ]);
+        }
+        return redirect ('/');
+    }
+
+    public function showAjax(string $id)
+    {
+        $user = usermodel::with('level')->findOrFail($id);
+        return view('user.show_ajax')->with('user', $user);
+    }
+
+   
+
 }

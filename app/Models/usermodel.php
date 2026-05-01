@@ -28,4 +28,9 @@ class usermodel extends Model
         return $this->belongsTo(levelmodel::class, 'level_id', 'level_id');
     }
 
+    public function stok()
+    {
+        return $this->hasMany(stockmodel::class, 'user_id', 'user_id');
+    }
+
 }

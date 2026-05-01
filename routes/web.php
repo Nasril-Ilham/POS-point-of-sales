@@ -6,6 +6,7 @@ use App\Http\Controllers\kategoricontroller;
 use App\Http\Controllers\levelcontroller;
 use App\Http\Controllers\Product;
 use App\Http\Controllers\ProductPage;
+use App\Http\Controllers\StokController;
 use App\Http\Controllers\Transaction;
 use App\Http\Controllers\UserPage;
 use App\Http\Controllers\WelcomeController;
@@ -20,13 +21,19 @@ Route::group(['prefix' => 'user'], function() {
     Route::get('/list-test', [UserPage::class,  'listTest']);
     Route::get('/create', [UserPage::class,  'create']);
     Route::post('/', [UserPage::class,  'store']);
+    Route::get('/create_ajax', [UserPage::class,  'createAjax']);
+    Route::post('/store_ajax', [UserPage::class,  'storeAjax']);
     Route::get('/{id}', [UserPage::class,  'show']);
+    Route::get('/{id}/show_ajax', [UserPage::class,  'showAjax']);
     Route::get('/{id}/edit', [UserPage::class,  'edit']);
     Route::put('/{id}', [UserPage::class,  'update']);
+    Route::get('/{id}/edit_ajax', [UserPage::class,  'editAjax']);
+    Route::put('/{id}/update_ajax', [UserPage::class,  'updateAjax']);
+    Route::get('/{id}/delete_ajax', [UserPage::class,  'deleteAjax']);
     Route::delete('/{id}', [UserPage::class,  'destroy']);
 });
 
-route::group(['prefix' => 'level'], function() {
+Route::group(['prefix' => 'level'], function() {
     Route::post('/list', [levelcontroller::class,  'list']);
     Route::get('/', [levelcontroller::class,  'index']);
     Route::get('/create', [levelcontroller::class,  'create']);
@@ -62,5 +69,13 @@ Route::group(['prefix' => 'kategori'], function(){
     Route::delete('/{id}', [kategoricontroller::class,  'destroy']);
 });
 
-
-
+Route::group(['prefix' => 'stok'], function(){
+    Route::get('/', [StokController::class,  'index']);
+    Route::post('/list', [StokController::class,  'list']);
+    Route::get('/create', [StokController::class,  'create']);
+    Route::post('/', [StokController::class,  'store']);
+    Route::get('/{id}', [StokController::class,  'show']);
+    Route::get('/{id}/edit', [StokController::class,  'edit']);
+    Route::put('/{id}', [StokController::class,  'update']);
+    Route::delete('/{id}', [StokController::class,  'destroy']);
+});

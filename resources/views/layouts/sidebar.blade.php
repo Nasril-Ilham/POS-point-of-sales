@@ -75,10 +75,10 @@
 
         <li class="nav-header">data transaksi</li>
         <li class="nav-item">
-          <a href="{{ url('/stock') }}" class="nav-link {{ ($activemenu == 'stock') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-copy"></i>
+          <a href="{{ url('/stok') }}" class="nav-link {{ ($activemenu == 'stok') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-box"></i>
             <p>
-              stock barang
+              stok barang
               <span class="badge badge-info right">6</span>
             </p>
           </a>

@@ -66,13 +66,13 @@
                 },
                 {
                     data: "level_kode",
-                    className: "",
+                    className: "text-center",
                     orderable: true,
                     searchable: true
                 },
                 {
                     data: "level_nama",
-                    className: "",
+                    className: "text-center",
                     orderable: true,
                     searchable: true
                 },

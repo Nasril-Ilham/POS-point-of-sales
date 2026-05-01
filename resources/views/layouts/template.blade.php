@@ -14,6 +14,9 @@
   <link rel="stylesheet" href="{{ asset ('adminLTE/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
   <link rel="stylesheet" href="{{ asset ('adminLTE/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
 
+  {{-- sweetalert2 --}}
+  <link rel="stylesheet" href="{{ asset ('adminLTE/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
@@ -102,6 +105,14 @@
 <script src="{{asset('adminLTE/plugins/datatables-buttons/js/buttons.html5.min.js')}}"></script>
 <script src="{{asset('adminLTE/plugins/datatables-buttons/js/buttons.print.min.js')}}"></script>
 <script src="{{asset('adminLTE/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
+
+{{-- jquery validation --}}
+<script src="{{ asset ('adminLTE/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
+<script src="{{ asset ('adminLTE/plugins/jquery-validation/additional-methods.min.js') }}"></script>
+
+{{-- sweetalert2 --}}
+<script src="{{ asset ('adminLTE/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
+
 
 <!-- AdminLTE App -->
 <script src="{{asset('adminLTE/dist/js/adminlte.min.js')}}"></script>
