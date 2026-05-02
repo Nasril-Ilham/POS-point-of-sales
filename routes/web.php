@@ -29,7 +29,8 @@ Route::group(['prefix' => 'user'], function() {
     Route::put('/{id}', [UserPage::class,  'update']);
     Route::get('/{id}/edit_ajax', [UserPage::class,  'editAjax']);
     Route::put('/{id}/update_ajax', [UserPage::class,  'updateAjax']);
-    Route::get('/{id}/delete_ajax', [UserPage::class,  'deleteAjax']);
+    Route::get('/{id}/confirmDeleteAjax', [UserPage::class,  'confirmDeleteAjax']);
+    Route::delete('/{id}/destroyAjax', [UserPage::class,  'destroyAjax']);
     Route::delete('/{id}', [UserPage::class,  'destroy']);
 });
 

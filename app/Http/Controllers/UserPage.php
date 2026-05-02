@@ -52,7 +52,7 @@ public function list(Request $request)
             //          </form>';
             $btn = '<button onclick="modelAction(\''.url('/user/'.$user->user_id.'/show_ajax').'\')" class="btn btn-sm btn-primary">Detail</button> ';
             $btn .= '<button onclick="modelAction(\''.url('/user/'.$user->user_id.'/edit_ajax').'\')" class="btn btn-sm btn-info">Edit</button> ';
-            $btn .= '<button onclick="modelAction(\''.url('/user/'.$user->user_id.'/delete_ajax').'\')" class="btn btn-sm btn-danger">Hapus</button>';
+            $btn .= '<button onclick="modelAction(\''.url('/user/'.$user->user_id.'/confirmDeleteAjax').'\')" class="btn btn-sm btn-danger">Hapus</button>';
 
             return $btn;
         })
@@ -252,6 +252,65 @@ $activemenu = 'user';
         return view('user.show_ajax')->with('user', $user);
     }
 
+    public function confirmDeleteAjax(string $id)
+    {
+        $user = usermodel::findOrFail($id);
+        return view('user.confirm_ajax_delete')->with('user', $user);
+    }
    
+    // karna memiliki relasi dengan tabel lain seperti stok, maka ketika user di hapus akan di cek terlebih dahulu apakah user tersebut memiliki transaksi atau tidak, jika memiliki transaksi maka data user tidak bisa di hapus dan akan menampilkan pesan error, namun jika tidak memiliki transaksi maka data user akan di hapus dan menampilkan pesan success
+    // cara agar bisa cascade delete atau menghapus data user beserta data stok yang berelasi dengan user tersebut bisa menggunakan on delete cascade di database, namun cara ini tidak di sarankan karena bisa menyebabkan data yang tidak di inginkan ikut terhapus, seperti data stok yang seharusnya masih di butuhkan untuk laporan atau keperluan lainnya ikut terhapus ketika user di hapus, maka dari itu cara yang lebih aman adalah dengan melakukan pengecekan terlebih dahulu sebelum menghapus data user, jika memiliki transaksi maka data user tidak bisa
+    // trs cara yang benar adalah dengan melakukan pengecekan terlebih dahulu sebelum menghapus data user, jika memiliki transaksi maka data user tidak bisa di hapus dan akan menampilkan pesan error, namun jika tidak memiliki transaksi maka data user akan di hapus dan menampilkan pesan success
+    // tabel di bawah ini terhubung dengan level_id di tabel m_level, maka ketika data level di hapus akan di cek terlebih dahulu apakah data level tersebut memiliki relasi dengan data user atau tidak, jika memiliki relasi dengan data user maka data level tidak bisa di hapus dan akan menampilkan pesan error, namun jika tidak memiliki relasi dengan data user maka data level akan di hapus dan menampilkan pesan success
 
+    public function destroyAjax(string $id)
+    {
+        if(request()->ajax() || request()->wantsJson()){
+            try {
+                $user = usermodel::find($id);
+                $user->delete();
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data user berhasil dihapus'
+                ]);
+            } catch(\Exception $e){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data user tidak bisa dihapus karena memiliki transaksi'
+                ]);
+            }
+        }
+        return redirect ('/');
+    }
+
+    // contoh cascade delete yang tidak di sarankan, karena bisa menyebabkan data yang tidak di inginkan ikut terhapus, seperti data stok yang seharusnya masih di butuhkan untuk laporan atau keperluan lainnya ikut terhapus ketika user di hapus, maka dari itu cara yang lebih aman adalah dengan melakukan pengecekan terlebih dahulu sebelum menghapus data user, jika memiliki transaksi maka data user tidak bisa dihapus
+//     public function destroyAjax(string $id)
+// {
+//     if(request()->ajax() || request()->wantsJson()){
+//         $user = usermodel::find($id);
+
+//         if(!$user){
+//             return response()->json([
+//                 'status' => false,
+//                 'message' => 'Data user tidak ditemukan'
+//             ]);
+//         }
+
+//         try {
+//             // Dengan Cascade di Migration, transaksi akan otomatis hilang
+//             $user->delete();
+            
+//             return response()->json([
+//                 'status' => true,
+//                 'message' => 'Data user dan transaksi terkait berhasil dihapus'
+//             ]);
+//         } catch(\Exception $e){
+//             return response()->json([
+//                 'status' => false,
+//                 'message' => 'Gagal menghapus data: ' . $e->getMessage()
+//             ]);
+//         }
+//     }
+//     return redirect('/');
+// }
 }
