@@ -210,41 +210,49 @@ $activemenu = 'user';
     }
 
     public function updateAjax(Request $request, string $id)
-    {
-        if($request->ajax() || $request->wantsJson()){
-            $rules = [
-                'user_nama' => 'required|string|min:3|unique:m_user,user_nama,'.$id.',user_id',
-                'nama' => 'required|string|max:100',
-                'password' => 'nullable|string|min:6',
-                'level_id' => 'required|integer'
-            ];
+{
+    if($request->ajax() || $request->wantsJson()){
 
-            $validator = Validator::make($request->all(), $rules);
+        $rules = [
+            'level_id' => 'required|integer',
+            'user_nama' => 'required|min:3|max:20',
+            'nama' => 'required|min:3|max:100',
+            'password' => 'nullable|min:6|max:20'
+        ];
 
-            if($validator->fails()){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Validasi gagal',
-                    'msgField' => $validator->errors()
-                ]);
-            }
+        $validator = Validator::make($request->all(), $rules);
 
-            $user = usermodel::findOrFail($id);
-            $user->user_nama = $request->user_nama;
-            $user->nama = $request->nama;
-            $user->level_id = $request->level_id;
-            if($request->password){
-                $user->password = Hash::make($request->password);
-            }
-            $user->save();
-
+        if($validator->fails()){
             return response()->json([
-                'status' => true,
-                'message' => 'Data user berhasil diupdate'
+                'status' => false,
+                'message' => 'Validasi gagal',
+                'msgField' => $validator->errors()
             ]);
         }
-        return redirect ('/');
+
+        // simpan ke database
+        $user = usermodel::findOrFail($id);
+
+        $user->level_id = $request->level_id;
+        $user->user_nama = $request->user_nama;
+        $user->nama = $request->nama;
+
+        if($request->filled('password')){
+            $user->password = bcrypt($request->password);
+        }
+
+        $user->save();
+
+        // response AJAX
+        return response()->json([
+            'status' => true,
+            'message' => 'Data berhasil diupdate'
+        ]);
     }
+
+    // kalau bukan AJAX
+    return redirect('/user');
+}
 
     public function showAjax(string $id)
     {
@@ -267,7 +275,7 @@ $activemenu = 'user';
     {
         if(request()->ajax() || request()->wantsJson()){
             try {
-                $user = usermodel::find($id);
+                $user = usermodel::findOrFail($id);
                 $user->delete();
                 return response()->json([
                     'status' => true,
@@ -283,7 +291,7 @@ $activemenu = 'user';
         return redirect ('/');
     }
 
-    // contoh cascade delete yang tidak di sarankan, karena bisa menyebabkan data yang tidak di inginkan ikut terhapus, seperti data stok yang seharusnya masih di butuhkan untuk laporan atau keperluan lainnya ikut terhapus ketika user di hapus, maka dari itu cara yang lebih aman adalah dengan melakukan pengecekan terlebih dahulu sebelum menghapus data user, jika memiliki transaksi maka data user tidak bisa dihapus
+    //contoh cascade delete yang tidak di sarankan, karena bisa menyebabkan data yang tidak di inginkan ikut terhapus, seperti data stok yang seharusnya masih di butuhkan untuk laporan atau keperluan lainnya ikut terhapus ketika user di hapus, maka dari itu cara yang lebih aman adalah dengan melakukan pengecekan terlebih dahulu sebelum menghapus data user, jika memiliki transaksi maka data user tidak bisa dihapus
 //     public function destroyAjax(string $id)
 // {
 //     if(request()->ajax() || request()->wantsJson()){

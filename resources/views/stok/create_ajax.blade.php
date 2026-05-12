@@ -1,60 +1,53 @@
-@empty($user)
-<div id="modal-master" class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Kesalahan</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <div class="alert alert-danger">
-                <h5><i class="icon fas fa-ban"></i> Kesalahan!!!</h5>
-                Data yang anda cari tidak ditemukan
-            </div>
-            <a href="{{ url('/user') }}" class="btn btn-warning">Kembali</a>
-        </div>
-    </div>
-</div>
-@else
-
-<form action="{{ url('/user/' . $user->user_id.'/update_ajax') }}" method="POST" id="form-edit">
+<form action="{{ url('/stok/store_ajax') }}" method="POST" id="form-tambah">
     @csrf
-    @method('PUT')
     <div id="modal-master" class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Edit Data User</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Data Stok</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Level Pengguna</label>
-                    <select name="level_id" id="level_id" class="form-control" required>
-                        <option value="">- Pilih Level -</option>
-                        @foreach($levels as $l)
-                            <option {{ ($l->level_id == $user->level_id)? 'selected' : '' }} value="{{ $l->level_id }}">{{ $l->level_nama }}</option>
+                    <label>Supplier</label>
+                    <select name="supplier_id" id="supplier_id" class="form-control" required>
+                        <option value="">- Pilih Supplier -</option>
+                        @foreach($supplier as $item)
+                            <option value="{{ $item->supplier_id }}">{{ $item->supplier_nama }}</option>
                         @endforeach
                     </select>
-                    <small id="error-level_id" class="error-text form-text text-danger"></small>
+                    <small id="error-supplier_id" class="error-text form-text text-danger"></small>
+                </div>
+                <div class="form-grup">
+                    <label>Kategori</label>
+                    <select name="kategori_id" id="kategori_id" class="form-control" required>
+                        <option value="">- Pilih Kategori -</option>
+                        @foreach($kategori as $item)
+                            <option value="{{ $item->kategori_id }}">{{ $item->kategori_nama }}</option>
+                        @endforeach
+                    </select>
+                    <small id="error-kategori_id" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
-                    <label>Username</label>
-                    <input value="{{ $user->user_nama }}" type="text" name="user_nama" id="user_nama" class="form-control" required>
-                    <small id="error-user_nama" class="error-text form-text text-danger"></small>
+                    <label>user</label>
+                    <select name="user_id" id="user_id" class="form-control" required>
+                        <option value="">- Pilih User -</option>
+                        @foreach($user as $item)
+                            <option value="{{ $item->user_id }}">{{ $item->user_nama }}</option>
+                        @endforeach
+                    </select>
+                    <small id="error-user_id" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
-                    <label>Nama</label>
-                    <input value="{{ $user->nama }}" type="text" name="nama" id="nama" class="form-control" required>
-                    <small id="error-nama" class="error-text form-text text-danger"></small>
+                    <label>tanggal stok</label>
+                    <input value="" type="date" name="stok_tanggal" id="stok_tanggal" class="form-control" required>
+                    <small id="error-stok_tanggal" class="error-text form-text text-danger"></small>
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
-                    <input value="" type="password" name="password" id="password" class="form-control">
-                    <small class="form-text text-muted">Abaikan jika tidak ingin ubah password</small>
-                    <small id="error-password" class="error-text form-text text-danger"></small>
+                    <label>jumlah stock</label>
+                    <input value="" type="text" name="stok_jumlah" id="stok_jumlah" class="form-control" required placeholder="0">
+                    <small id="error-stok_jumlah" class="error-text form-text text-danger"></small>
                 </div>
             </div>
             <div class="modal-footer">
@@ -69,22 +62,22 @@
     $(document).ready(function() {
         // Reset form ketika modal ditutup
         $('#myModal').on('hidden.bs.modal', function() {
-            $('#form-edit')[0].reset();
+            $('#form-tambah')[0].reset();
             $('.error-text').text('');
             $('.form-control').removeClass('is-invalid');
         });
 
-        $("#form-edit").validate({
+        $("#form-tambah").validate({
             rules: {
                 level_id: { required: true, number: true },
                 user_nama: { required: true, minlength: 3, maxlength: 20 },
                 nama: { required: true, minlength: 3, maxlength: 100 },
-                password: { minlength: 6, maxlength: 20 }
+                password: { required: true, minlength: 6, maxlength: 20 }
             },
             submitHandler: function(form) {
                 $.ajax({
                     url: form.action,
-                    type: 'POST',
+                    type: form.method,
                     data: $(form).serialize(),
                     success: function(response) {
                         console.log(response); // Debug
@@ -135,4 +128,3 @@
         });
     });
 </script>
-@endempty

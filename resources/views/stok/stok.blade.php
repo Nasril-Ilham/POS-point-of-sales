@@ -8,6 +8,9 @@
             <a class="btn btn-sm btn-primary mt-1" href="{{ url('stok/create') }}">
                 <i class="fas fa-plus"></i> Tambah
             </a>
+            <button onclick="modelAction('{{ url('stok/create_ajax') }}')" class="btn btn-sm btn-info mt-1">
+                <i class="fas fa-plus"></i> Tambah (Ajax)
+            </button>
         </div>
     </div>
     <div class="card-body">
@@ -61,6 +64,9 @@
         </table>
     </div>
 </div>
+
+<!-- Modal Container -->
+<div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" data-width="75%" aria-hidden="true"></div>  
 @endsection
 
 @push('css')
@@ -68,8 +74,16 @@
 
 @push('js')
 <script>
+    // Fungsi untuk memanggil Modal AJAX
+    function modelAction(url) {
+        $('#myModal').load(url, function() {
+            $(this).modal('show');
+        });
+    }
+
+    var dataStok; // Deklarasi variabel global agar bisa di-reload dari file create/edit ajax
     $(document).ready(function() {
-        var dataStok = $('#table_stok').DataTable({
+        dataStok = $('#table_stok').DataTable({
             serverSide: true,
             ajax: {
                 "url": "{{ url('stok/list') }}",
@@ -128,6 +142,7 @@
             ]
         });
 
+        // Trigger reload saat filter kategori berubah
         $('#kategori_id').change(function() {
             dataStok.ajax.reload();
         });

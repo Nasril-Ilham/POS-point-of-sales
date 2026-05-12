@@ -127,8 +127,11 @@
 
 </script>
 
-// Stack JS untuk memanggil custom JS di setiap halaman selalu taruh paling bawah sebelum tag </body> itu sangat sangat penting
-// bug saya di sini karena saya taruh di atas tag </body> jadi tidak bisa jalan, karena kalau kita push ke stack js itu akan di render di posisi kita memanggil stack js tersebut
+
   @stack('js')
 </body>
+{{-- 
+// Stack JS untuk memanggil custom JS di setiap halaman selalu taruh paling bawah sebelum tag /body itu sangat sangat penting
+// bug saya di sini karena saya taruh di atas tag  jadi tidak bisa jalan, karena kalau kita push ke stack js itu akan di render di posisi kita memanggil stack js tersebut --}}
 </html>
+

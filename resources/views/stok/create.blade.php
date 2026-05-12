@@ -6,7 +6,7 @@
         <h3 class="card-title">{{ $page->title }}</h3>
     </div>
     <div class="card-body">
-        <form method="POST" action="{{ url('stok') }}" class="form-horizontal">
+        <form method="POST" action="{{ url('stok/store') }}" class="form-horizontal">
             @csrf
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Supplier</label>

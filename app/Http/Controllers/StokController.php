@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class StokController extends Controller
 {
@@ -57,18 +58,16 @@ class StokController extends Controller
                 return $row->user->user_nama ?? '-';
             })
             ->addColumn('aksi', function($row){
-                $btn  = '<a href="'.url('/stok/'.$row->stok_id).'" class="btn btn-sm btn-info">Detail</a> ';
-                $btn .= '<a href="'.url('/stok/'.$row->stok_id.'/edit').'" class="btn btn-sm btn-primary">Edit</a> ';
-                $btn .= '<form action="'.url('/stok/'.$row->stok_id).'" method="POST" style="display:inline-block;">
-                            ' . csrf_field() . ' ' . method_field('DELETE') . '
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm(\'Yakin hapus?\')">Hapus</button>
-                         </form>';
+            $btn = '<button onclick="modelAction(\''.url('/stok/'.$row->stok_id.'/show_ajax').'\')" class="btn btn-sm btn-primary">Detail</button> ';
+            $btn .= '<button onclick="modelAction(\''.url('/stok/'.$row->stok_id.'/edit_ajax').'\')" class="btn btn-sm btn-info">Edit</button> ';
+            $btn .= '<button onclick="modelAction(\''.url('/stok/'.$row->stok_id.'/confirmDeleteAjax').'\')" class="btn btn-sm btn-danger">Hapus</button>';
                 return $btn;
             })
             ->rawColumns(['aksi'])
             ->toJson();
     }
 
+    // ini berada di blade stock untuk membuat form nama supplier, kategori, dan user
     public function create()
     {
         $breadcrum = (object) [
@@ -84,6 +83,9 @@ class StokController extends Controller
         $activemenu = 'stok';
         return view('stok.create', ['breadcrum' => $breadcrum, 'page' => $page, 'activemenu' => $activemenu, 'supplier' => $supplier, 'kategori' => $kategori, 'user' => $user]);
     }
+
+    // ini ada di form dan di action nya post dan logic di bawah ini di jalankan 
+    // $request untuk menangkap data yang kita inputkan di form 
 
     public function store(Request $request)
     {
@@ -105,6 +107,8 @@ class StokController extends Controller
 
         return redirect('/stok')->with('success', 'Data stok berhasil ditambahkan');
     }
+
+    // end dari pembuatan form tambah stok barang, selanjutnya untuk detail stok barang masuk
 
     public function show(string $id)
     {
@@ -168,4 +172,88 @@ class StokController extends Controller
             return redirect('/stok')->with('error', 'Data stok tidak bisa dihapus');
         }
     }
+
+    // ajax
+    public function createAjax(){
+        $supplier = suppliermodel::select('supplier_id', 'supplier_nama')->get();
+        $kategori = categorymodel::all();
+        $user = usermodel::all();
+        return view('stok.create_ajax')->with('supplier', $supplier)->with('kategori', $kategori)->with('user', $user);   
+    }
+
+    public function storeAjax(Request $request){
+        if ($request->ajax() || $request->wantsJson()){
+            $rules = [
+                'supplier_id' => 'required|integer|exists:m_supplier,supplier_id',
+                'kategori_id' => 'required|integer|exists:m_kategori,kategori_id',
+                'user_id' => 'required|integer|exists:m_user,user_id',
+                'stok_tanggal' => 'required|date',
+                'stok_jumlah' => 'required|integer|min:1'
+            ];
+
+            $validate = validator($request->all(), $rules);
+
+            $stok = stockmodel::create([
+                'supplier_id' => $request->supplier_id,
+                'kategori_id' => $request->kategori_id,
+                'user_id' => $request->user_id,
+                'stok_tanggal' => $request->stok_tanggal,
+                'stok_jumlah' => $request->stok_jumlah
+            ]);
+
+           return response()->json([
+                'status' => true,
+                'message' => 'Data supplier berhasil ditambahkan'
+            ]);
+        }
+        return redirect('/');
+    }
+
+    public function showAjax(string $id){
+        $stok = stockmodel::with('supplier', 'kategori', 'user')->findOrFail($id);
+        return view('stok.show_ajax')->with('stok', $stok);
+    }
+
+    public function editAjax(string $id){
+    $stok = stockmodel::findOrFail($id);
+    return view('stok.edit_ajax')->with('stok', $stok);
+   }
+
+  public function updateAjax(Request $request, string $id) {
+    // 1. Perbaikan Rules: Sesuaikan dengan field di tabel t_stok
+    $rules = [
+        'supplier_id'  => 'required|integer|exists:m_supplier,supplier_id',
+        'kategori_id'  => 'required|integer|exists:m_kategori,kategori_id',
+        'user_id'      => 'required|integer|exists:m_user,user_id',
+        'stok_tanggal' => 'required|date',
+        'stok_jumlah'  => 'required|numeric',
+    ];
+
+    $validator = Validator::make($request->all(), $rules);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status'   => false,
+            'message'  => 'Validasi gagal.',
+            'msgField' => $validator->errors()
+        ]);
+    }
+
+    // 2. Perbaikan Nama Model (Gunakan PascalCase: StockModel atau StokModel)
+    // Pastikan nama model sesuai dengan file di folder Models Anda
+    $stok = stockmodel::findOrFail($id); 
+    
+    if ($stok) {
+        $stok->update($request->all());
+        return response()->json([
+            'status'  => true,
+            'message' => 'Data stok berhasil diupdate'
+        ]);
+    }
+
+    return response()->json([
+        'status'  => false,
+        'message' => 'Data tidak ditemukan'
+    ]);
+}
 }

@@ -39,7 +39,7 @@
             <i class="nav-icon fas fa-layer-group"></i>
             <p>
               level user
-              <span class="right badge badge-danger">New</span>
+              <span class="right badge badge-danger"></span>
             </p>
           </a>
         </li>
@@ -48,7 +48,7 @@
             <i class="nav-icon fas fa-copy"></i>
             <p>
               Data user
-              <span class="badge badge-info right">6</span>
+              <span class="badge badge-info right"></span>
             </p>
           </a>
         </li>
@@ -59,7 +59,7 @@
             <i class="nav-icon fas fa-copy"></i>
             <p>
               Kategori barang
-              <span class="badge badge-info right">6</span>
+              <span class="badge badge-info right"></span>
             </p>
           </a>
         </li>
@@ -68,7 +68,16 @@
             <i class="nav-icon fas fa-boxes"></i>
             <p>
               Data barang
-              <span class="badge badge-info right">6</span>
+              <span class="badge badge-info right"></span>
+            </p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ url('/supplier') }}" class="nav-link {{ ($activemenu == 'supplier') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-copy"></i>
+            <p>
+              Data suplier
+              <span class="badge badge-info right"></span>
             </p>
           </a>
         </li>
@@ -79,7 +88,7 @@
             <i class="nav-icon fas fa-box"></i>
             <p>
               stok barang
-              <span class="badge badge-info right">6</span>
+              <span class="badge badge-info right"></span>
             </p>
           </a>
         </li>
@@ -88,7 +97,7 @@
             <i class="nav-icon fas fa-copy"></i>
             <p>
               transaksi penjualan
-              <span class="badge badge-info right">6</span>
+              <span class="badge badge-info right"></span>
             </p>
           </a>
         </li>

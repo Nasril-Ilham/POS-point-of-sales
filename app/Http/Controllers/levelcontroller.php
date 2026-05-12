@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\levelmodel;
+use Doctrine\Inflector\Rules\French\Rules;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class levelcontroller extends Controller
 {
@@ -31,12 +35,10 @@ class levelcontroller extends Controller
         return DataTables::of($level)
             ->addIndexColumn()
             ->addColumn('aksi', function($level){
-                $btn  = '<a href="'.url('/level/'.$level->level_id).'" class="btn btn-sm btn-info">Detail</a> ';
-                $btn .= '<a href="'.url('/level/'.$level->level_id.'/edit').'" class="btn btn-sm btn-primary">Edit</a> ';
-                $btn .= '<form action="'.url('/level/'.$level->level_id).'" method="POST" style="display:inline-block;">
-                            ' . csrf_field() . ' ' . method_field('DELETE') . '
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm(\'Yakin hapus?\')">Hapus</button>
-                         </form>';
+            $btn = '<button onclick="modelAction(\''.url('/level/'.$level->level_id.'/show_ajax').'\')" class="btn btn-sm btn-primary">Detail</button> ';
+            $btn .= '<button onclick="modelAction(\''.url('/level/'.$level->level_id.'/edit_ajax').'\')" class="btn btn-sm btn-info">Edit</button> ';
+            $btn .= '<button onclick="modelAction(\''.url('/level/'.$level->level_id.'/confirmDeleteAjax').'\')" class="btn btn-sm btn-danger">Hapus</button>';
+
                 return $btn;
             })
             ->rawColumns(['aksi'])
@@ -124,4 +126,109 @@ class levelcontroller extends Controller
             return redirect('/level')->with('error', 'Data level tidak bisa dihapus karena memiliki data user');
         }
     }
+
+    // ajax
+    public function createAjax(){
+        $level = levelmodel::select('level_id')->get();
+        return view('level.create_ajax')->with('level', $level);
+    }
+
+    public function storeAjax(Request $request){
+        if ($request->json() || $request->wantsJson()){
+            $rules = [
+                'level_kode' => 'required|string|max:10|unique:m_level,level_kode',
+            'level_nama' => 'required|string|max:50'
+            ];
+
+            $validator = validator::make($request->all(),$rules);
+
+            if($validator->fails()){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Validasi gagal',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+
+            levelmodel::create([
+                'level_kode' => $request->level_kode,
+                'level_nama' => $request->level_nama
+                
+            ]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Data user berhasil ditambahkan'
+            ]);
+        }
+
+        redirect('/');
+    }
+
+    public function showAjax(string $id)
+    {
+        $level = levelmodel::findOrFail($id);
+        return view('level.show_ajax')->with('level', $level);
+    }
+
+    public function editAjax(string $id){
+
+        $level = levelmodel::findOrFail($id);
+        return View('level.edit_ajax')->with('level', $level);
+    }
+
+  public function updateAjax(Request $request, string $id)
+{
+    $rules = [
+        'level_kode' => 'required|string|max:10',
+        'level_nama' => 'required|string|max:50'
+    ];
+
+    $validator = Validator::make($request->all(), $rules);
+
+    if($validator->fails()){
+        return response()->json([
+            'status' => false,
+            'message' => 'Validasi gagal',
+            'msgField' => $validator->errors()
+        ]);
+    }
+
+    $level = levelmodel::findOrFail($id);
+
+    $level->level_kode = $request->level_kode;
+    $level->level_nama = $request->level_nama;
+
+    $level->save();
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Data berhasil diupdate'
+    ]);
 }
+     public function confirmDeleteAjax(string $id){
+        $level = levelmodel::findOrFail($id);
+        return view('level.confirm_ajax')->with('level', $level);
+     }
+
+     public function destroyAjax(string $id){
+        if(request()->ajax() || request()->wantsJson()){
+            try {
+                $level = levelmodel::findOrFail($id);
+                $level->delete();
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data user berhasil dihapus'
+                ]);
+            } catch(\Exception $e){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data user tidak bisa dihapus karena memiliki transaksi'
+                ]);
+            }
+        }
+        return redirect ('/');
+     }
+}
+
+
+

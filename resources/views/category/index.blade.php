@@ -8,6 +8,9 @@
             <a class="btn btn-sm btn-primary mt-1" href="{{ url('kategori/create') }}">
                 <i class="fas fa-plus"></i> Tambah
             </a>
+            <button onclick="modelAction('{{ url('kategori/create_ajax') }}')" class="btn btn-sm btn-info mt-1">
+                <i class="fas fa-plus"></i> Tambah (Ajax)
+            </button>
         </div>
     </div>
     <div class="card-body">
@@ -39,6 +42,8 @@
         </table>
     </div>
 </div>
+
+<div id="myModal" class="modal fade animate shake" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" data-width="75%" aria-hidden="true"></div>  
 @endsection
 
 @push('css')
@@ -46,6 +51,13 @@
 
 @push('js')
 <script>
+    
+    function modelAction(url) {
+    $('#myModal').load(url, function() {
+      $('#myModal').modal('show');
+    });
+}
+
     $(document).ready(function() {
         var dataKategori = $('#table_kategori').DataTable({
             serverSide: true,

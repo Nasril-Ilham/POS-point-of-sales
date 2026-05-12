@@ -60,7 +60,7 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Tanggal Stok</label>
                 <div class="col-sm-10">
-                    <input type="date" class="form-control @error('stok_tanggal') is-invalid @enderror" id="stok_tanggal" name="stok_tanggal" value="{{ old('stok_tanggal', $stok->stok_tanggal) }}">
+                    <input type="text" class="form-control @error('stok_tanggal') is-invalid @enderror" id="stok_tanggal" name="stok_tanggal" value="{{ old('stok_tanggal', $stok->stok_tanggal) }}">
                     @error('stok_tanggal')
                         <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
