@@ -42,7 +42,11 @@
         </div>
     </div>
 </form>
+
+{{-- pada user ini ketika kita input data auto reload dan dimana itu tidak semua code saya begitu cuma ini mungkin bisa 
+di pelajari di bagian manaya itu terjadi --}}
 <script>
+    
     $(document).ready(function() {
         // Reset form ketika modal ditutup
         $('#myModal').on('hidden.bs.modal', function() {
