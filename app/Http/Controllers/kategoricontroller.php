@@ -204,4 +204,28 @@ class kategoricontroller extends Controller
         ]);
     }
 }
+
+public function confirmDeleteAjax(string $id){
+        $kategori = categorymodel::findOrFail($id);
+        return view('category.confirm_ajax')->with('kategori', $kategori);
+     }
+
+     public function destroyAjax(string $id) {
+    if (request()->ajax() || request()->wantsJson()) {
+        try {
+            $kategori = categorymodel::findOrFail($id);
+            $kategori->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'Data kategori berhasil dihapus'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data kategori tidak bisa dihapus karena masih terkait dengan data barang'
+            ]);
+        }
+    }
+    return redirect('/');
+}
 }

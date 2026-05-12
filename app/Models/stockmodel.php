@@ -24,4 +24,8 @@ class stockmodel extends Model
     {
         return $this->belongsTo(usermodel::class, 'user_id', 'user_id');
     }
+
+    public function barang() {
+    return $this->belongsTo(BarangModel::class, 'barang_id', 'barang_id');
+}
 }

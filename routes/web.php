@@ -101,10 +101,10 @@ Route::group(['prefix' => 'stok'], function(){
     Route::post('/list', [StokController::class,  'list']);
     Route::get('/create', [StokController::class,  'create']);
     Route::post('/store', [StokController::class,  'store']);
+     Route::get('/{id}/confirm', [StokController::class,  'confirmajax']);
     Route::get('/{id}/show_ajax', [StokController::class,  'showAjax']);
     Route::get('/{id}/edit_ajax', [StokController::class, 'editAjax']);
     Route::put('/{id}/update_ajax', [StokController::class, 'updateAjax']);
-     Route::get('/{id}/confirmDeleteAjax', [StokController::class,  'confirmDeleteAjax']);
     Route::delete('/{id}/destroyAjax', [StokController::class,  'destroyAjax']);
     Route::get('/{id}', [StokController::class,  'show']);
     Route::get('/{id}/edit', [StokController::class,  'edit']);

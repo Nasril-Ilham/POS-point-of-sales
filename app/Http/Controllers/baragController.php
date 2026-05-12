@@ -225,4 +225,29 @@ class baragController extends Controller
         'message' => 'Data tidak ditemukan'
     ]);
 }
+
+
+public function confirmDeleteAjax(string $id){
+        $barang = barangmodel::findOrFail($id);
+        return view('barang.confirm_ajax')->with('barang', $barang);
+     }
+
+     public function destroyAjax(string $id) {
+    if (request()->ajax() || request()->wantsJson()) {
+        try {
+            $barang = BarangModel::findOrFail($id);
+            $barang->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'Data barang berhasil dihapus'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data barang tidak bisa dihapus karena masih terkait dengan data stok atau transaksi'
+            ]);
+        }
+    }
+    return redirect('/');
+}
 }

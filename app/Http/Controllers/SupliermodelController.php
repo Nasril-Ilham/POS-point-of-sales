@@ -210,5 +210,29 @@ class SupliermodelController extends Controller
         'message' => 'Data tidak ditemukan'
     ]);
 }
+
+public function confirmDeleteAjax(string $id){
+        $supplier = supliermodel::findOrFail($id);
+        return view('supplier.confirm_ajax')->with('supplier', $supplier);
+     }
+
+     public function destroyAjax(string $id) {
+    if (request()->ajax() || request()->wantsJson()) {
+        try {
+            $supplier = SupplierModel::findOrFail($id);
+            $supplier->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'Data supplier berhasil dihapus'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data supplier tidak bisa dihapus karena masih memiliki riwayat transaksi'
+            ]);
+        }
+    }
+    return redirect('/supplier');
+}
     
 }

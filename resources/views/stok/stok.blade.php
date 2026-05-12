@@ -81,6 +81,9 @@
         });
     }
 
+    // pelajari ini juga karna ini awal dari reload nya dan menampung modal 
+    // var datastok ini akan di panggil pada edit 
+
     var dataStok; // Deklarasi variabel global agar bisa di-reload dari file create/edit ajax
     $(document).ready(function() {
         dataStok = $('#table_stok').DataTable({

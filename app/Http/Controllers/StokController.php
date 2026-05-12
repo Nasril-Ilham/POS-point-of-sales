@@ -60,7 +60,7 @@ class StokController extends Controller
             ->addColumn('aksi', function($row){
             $btn = '<button onclick="modelAction(\''.url('/stok/'.$row->stok_id.'/show_ajax').'\')" class="btn btn-sm btn-primary">Detail</button> ';
             $btn .= '<button onclick="modelAction(\''.url('/stok/'.$row->stok_id.'/edit_ajax').'\')" class="btn btn-sm btn-info">Edit</button> ';
-            $btn .= '<button onclick="modelAction(\''.url('/stok/'.$row->stok_id.'/confirmDeleteAjax').'\')" class="btn btn-sm btn-danger">Hapus</button>';
+            $btn .= '<button onclick="modelAction(\''.url('/stok/'.$row->stok_id.'/confirm').'\')" class="btn btn-sm btn-danger">Hapus</button>';
                 return $btn;
             })
             ->rawColumns(['aksi'])
@@ -255,5 +255,36 @@ class StokController extends Controller
         'status'  => false,
         'message' => 'Data tidak ditemukan'
     ]);
+}
+
+public function confirmajax(string $id){
+    // Ganti 'kategori' menjadi 'barang' agar sesuai dengan kebutuhan view
+    $stok = stockmodel::with(['supplier', 'kategori', 'user'])->find($id);
+
+    if (!$stok) {
+        return view('stok.confirm_ajax')->with('stok', null);
+    }
+
+    return view('stok.confirm_ajax')->with('stok', $stok);
+}
+
+public function destroyAjax(string $id) {
+    if (request()->ajax() || request()->wantsJson()) {
+        try {
+            // Gunakan nama model stok Anda (misal: StockModel atau StokModel)
+            $stok = stockmodel::findOrFail($id);
+            $stok->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'Catatan stok berhasil dihapus'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Data stok tidak bisa dihapus karena kendala sistem atau relasi database'
+            ]);
+        }
+    }
+    return redirect('/stok');
 }
 }

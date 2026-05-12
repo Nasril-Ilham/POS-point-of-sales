@@ -55,6 +55,8 @@
     </div>
 </form>
 
+{{-- pelajari ajax reload di bawah ini karna ada beberpaa fitur yang lainya tidak sama seperti ini --}}
+
 <script>
 $(document).ready(function () {
     $("#form-edit").validate({
@@ -80,6 +82,9 @@ $(document).ready(function () {
                         });
                         
                         // Reload DataTable (menggunakan variabel dataStok dari file index)
+                        // di sini var datastok di panggil dan akhirnya bisa membuat reload ketika kita update 
+                        // dan mungkin tambahan pada create karna cuma di create user yang bisa auto reloa ketika 
+                        // sudah input data 
                         if (typeof dataStok !== 'undefined') {
                             dataStok.ajax.reload(null, false);
                         } else {
