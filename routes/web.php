@@ -21,7 +21,7 @@ Route::pattern('id','[0-9]+');
 
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
-Route::get('logout', [AuthController::class, 'postlogin'])->middleware('auth');
+Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
 
 Route::middleware(['auth'])->group(function(){
 
@@ -45,7 +45,7 @@ Route::group(['prefix' => 'user'], function() {
     Route::delete('/{id}', [UserPage::class,  'destroy']);
 });
 
-Route::group(['prefix' => 'level'], function() {
+Route::group(['prefix' => 'level', 'middleware' => 'authorize:LVL001'], function() {
     Route::get('/create_ajax', [levelcontroller::class,  'createAjax']);
     Route::post('/store_ajax', [levelcontroller::class,  'storeAjax']);
     Route::post('/list', [levelcontroller::class,  'list']);
@@ -86,7 +86,7 @@ Route::group(['prefix' => 'barang'], function(){
 
 
 
-Route::group(['prefix' => 'kategori'], function(){
+Route::group(['prefix' => 'kategori', 'middleware' => 'authorize:LVL002'], function(){
     Route::get('/create_ajax', [kategoricontroller::class,  'createAjax']); 
     Route::post('/store_ajax', [kategoricontroller::class,  'storeAjax']);
     Route::get('/', [kategoricontroller::class,  'index']);

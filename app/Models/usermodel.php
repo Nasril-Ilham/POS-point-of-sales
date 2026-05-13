@@ -34,6 +34,25 @@ class usermodel extends Authenticatable
         return $this->belongsTo(levelmodel::class, 'level_id', 'level_id');
     }
 
+    // authorizer 
+
+    // mendapatkan nama role
+    public function getRoleName(): string
+    {
+        return $this->level->level_nama; 
+    }
+
+    // cek apkah user punya role sesuatu / penting
+
+    public function hasRole($role): bool
+    {
+        return $this->level->level_nama == $role ;
+    }
+
+
+
+    // authorizer end
+
     /**
      * Relasi: User bisa memiliki banyak Stok (One to Many)
      * Menghubungkan user_id di tabel m_stok ke user_id di tabel m_user

@@ -34,6 +34,8 @@ class AuthController extends Controller
 
 
             if (Auth::attempt($credentials)) {
+                // session agar tidak looping
+                $request->session()->regenerate();
                 return response()->json([
                     'status'   => true,
                     'message'  => 'Login Berhasil',
