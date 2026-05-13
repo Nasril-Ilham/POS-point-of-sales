@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\baragController;
 use App\Http\Controllers\HomePage;
 use App\Http\Controllers\kategoricontroller;
@@ -15,6 +16,15 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', [WelcomeController::class, 'index']);
+
+Route::pattern('id','[0-9]+');
+
+Route::get('login', [AuthController::class, 'login'])->name('login');
+Route::post('login', [AuthController::class, 'postlogin']);
+Route::get('logout', [AuthController::class, 'postlogin'])->middleware('auth');
+
+Route::middleware(['auth'])->group(function(){
+
 
 Route::group(['prefix' => 'user'], function() {
     Route::post('/list', [UserPage::class,  'list']);
@@ -129,4 +139,7 @@ Route::group(['prefix' => 'supplier'], function(){
     Route::get('/{id}/edit', [SupliermodelController::class,  'edit']);
     Route::put('/{id}', [SupliermodelController::class,  'update']);
     Route::delete('/{id}', [SupliermodelController::class,  'destroy']);
+});
+
+
 });
