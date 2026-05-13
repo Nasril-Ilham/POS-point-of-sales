@@ -12,9 +12,9 @@ class AuthorizeUser
     public function handle(Request $request, Closure $next, ...$role): Response // Gunakan ...$role
     {
         /** @var \App\Models\User $user */ // Tips: Ini untuk menghilangkan garis merah di VS Code
-        $user = Auth::user();
+        $user_role= $request->user()->getRole();
 
-        if ($user && in_array($user->level->level_kode, $role)) {
+        if (in_array($user_role, $role)) {
             return $next($request);
         }
 

@@ -86,7 +86,7 @@ Route::group(['prefix' => 'barang'], function(){
 
 
 
-Route::group(['prefix' => 'kategori', 'middleware' => 'authorize:LVL002'], function(){
+Route::group(['prefix' => 'kategori', 'middleware' => 'authorize:LVL002,LVL001'], function(){
     Route::get('/create_ajax', [kategoricontroller::class,  'createAjax']); 
     Route::post('/store_ajax', [kategoricontroller::class,  'storeAjax']);
     Route::get('/', [kategoricontroller::class,  'index']);

@@ -50,6 +50,12 @@ class usermodel extends Authenticatable
     }
 
 
+    // mendapatkan kode role
+
+    public function getRole()
+    {
+        return $this->level->level_kode;
+    }
 
     // authorizer end
 
