@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class baragController extends Controller
 {
@@ -329,5 +330,20 @@ public function import_ajax(Request $request)
         }
     }
     return redirect('/');
+}
+
+public function exportPdf(){
+    $barang = barangmodel::select('kategori_id','barang_kode','barang_nama','harga_beli','harga_jual')
+    ->orderBY('kategori_id')
+    ->orderBY('barang_kode')
+    ->with('kategori')
+    ->get();
+
+    $pdf = pdf::loadView('barang.export_pdf', ['barang' => $barang]);
+    $pdf->setPaper('a4','potrait');
+    $pdf->setOption('isRemoteEnable',true);
+    $pdf->render();
+
+    return $pdf->stream('Data barang'.date('Y-m-d H-i-s').'.pdf');
 }
 }

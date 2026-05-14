@@ -75,6 +75,8 @@ Route::group(['prefix' => 'barang'], function(){
     Route::post('/', [baragController::class,  'store']);
     Route::get('/import', [baragController::class, 'import']);
     Route::post('/import_ajax', [baragController::class, 'importAjax']);
+    Route::get('/export_excel', [baragController::class, 'exportExcel']);
+     Route::get('/export_pdf', [baragController::class, 'exportPdf']);
     Route::get('/{id}/show_ajax', [baragController::class,  'showAjax']);
     Route::get('/{id}/edit_ajax', [baragController::class, 'editAjax']);
     Route::put('/{id}/update_ajax', [baragController::class, 'updateAjax']);
