@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class baragController extends Controller
 {
@@ -245,6 +246,85 @@ public function confirmDeleteAjax(string $id){
             return response()->json([
                 'status' => false,
                 'message' => 'Data barang tidak bisa dihapus karena masih terkait dengan data stok atau transaksi'
+            ]);
+        }
+    }
+    return redirect('/');
+}
+ 
+public function import(){
+    return view('barang.import');
+}
+
+public function import_ajax(Request $request)
+{
+    if($request->ajax() || $request->wantsJson()){
+        $rules = [
+            // Validasi file harus xlsx, max 1MB
+            'file_barang' => ['required', 'mimes:xlsx', 'max:1024']
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if($validator->fails()){
+            return response()->json([
+                'status' => false,
+                'message' => 'Validasi Gagal',
+                'msgField' => $validator->errors()
+            ]);
+        }
+
+        $file = $request->file('file_barang'); 
+
+        try {
+            $reader = IOFactory::createReader('Xlsx');
+            $reader->setReadDataOnly(true);
+            $spreadsheet = $reader->load($file->getRealPath());
+            $sheet = $spreadsheet->getActiveSheet();
+            $data = $sheet->toArray(null, false, true, true); 
+
+            $insert = [];
+            if(count($data) > 1){ 
+                foreach ($data as $baris => $value) {
+                    if($baris > 1){ 
+                        // Tambahkan pengecekan jika kolom kosong agar tidak error database
+                        if(!empty($value['A']) && !empty($value['B'])){
+                            $insert[] = [
+                                'kategori_id' => $value['A'],
+                                'barang_kode' => $value['B'],
+                                'barang_nama' => $value['C'],
+                                'harga_beli'   => $value['D'],
+                                'harga_jual'   => $value['E'],
+                                'created_at'  => now(),
+                            ];
+                        }
+                    }
+                }
+
+                if(count($insert) > 0){
+                    // Menggunakan insertOrIgnore agar data duplikat tidak menyebabkan error
+                    BarangModel::insertOrIgnore($insert);
+
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'Data berhasil diimport'
+                    ]);
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Tidak ada data valid yang dapat diimport'
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'File Excel kosong'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Terjadi kesalahan saat membaca file: ' . $e->getMessage()
             ]);
         }
     }

@@ -5,6 +5,9 @@
     <div class="card-header">
         <h3 class="card-title">{{ $page->title }}</h3>
         <div class="card-tools">
+           <button onclick="modelAction('{{ url('/barang/import') }}')" class="btn btn-sm btn-success mt-1">
+    <i class="fa fa-file-import"></i> Import Barang
+</button> 
             <a class="btn btn-sm btn-primary mt-1" href="{{ url('barang/create') }}">
                 <i class="fas fa-plus"></i> Tambah
             </a>
