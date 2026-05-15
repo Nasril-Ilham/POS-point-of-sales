@@ -11,6 +11,9 @@
             <button onclick="modelAction('{{ url('user/create_ajax') }}')" class="btn btn-sm btn-info mt-1">
                 <i class="fas fa-plus"></i> Tambah (Ajax)
             </button>
+            <button onclick="modelAction('{{ url('user/import_foto') }}')" class="btn btn-sm btn-info mt-1">
+    <i class="bi bi-camera-fill"></i> Upload Foto
+</button>
         </div>
     </div>
     <div class="card-body">

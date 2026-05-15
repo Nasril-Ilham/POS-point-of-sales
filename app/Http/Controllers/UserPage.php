@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Nette\Schema\Message;
 use Psy\Readline\Interactive\Input\Buffer;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Storage;
 
 class UserPage extends Controller
 {
@@ -321,4 +322,48 @@ $activemenu = 'user';
 //     }
 //     return redirect('/');
 // }
+
+//  import foto
+
+  public function importFoto(){
+    $user = usermodel::all();
+    return view('user.upload_foto_ajax')->with('user', $user);
+  }
+
+  public function storeFoto(Request $request)
+    {
+        $request->validate([
+            'user_nama' => 'required', 
+            'foto'      => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        // Cari User berdasarkan ID dari dropdown
+        $user = usermodel::findOrFail($request->user_nama);
+
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $namaFile = 'profile_' . $user->user_id . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+            // Simpan ke storage/app/public/photos
+            $path = $file->storeAs('public/photos', $namaFile);
+
+            if ($path) {
+                // Hapus foto lama jika ada di folder storage
+                if ($user->image && Storage::exists('public/photos/' . $user->image)) {
+                    Storage::delete('public/photos/' . $user->image);
+                }
+
+                // Update database
+                $user->image = $namaFile;
+                $user->save();
+
+                return response()->json([
+                    'status'  => true,
+                    'message' => 'Foto profil ' . $user->nama . ' berhasil diperbarui!'
+                ]);
+            }
+        }
+
+        return response()->json(['status' => false, 'message' => 'Gagal unggah foto.']);
+    }
 }

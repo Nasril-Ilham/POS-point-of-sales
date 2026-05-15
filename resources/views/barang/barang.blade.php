@@ -14,7 +14,7 @@
             <button onclick="modelAction('{{ url('barang/create_ajax') }}')" class="btn btn-sm btn-info mt-1">
                 <i class="fas fa-plus"></i> Tambah (Ajax)
             </button>   
-            <a href="{{ url('/barang/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-
+            <a href="{{ url('barang/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-
 pdf"></i> Export Barang</a>
         </div>
     </div>

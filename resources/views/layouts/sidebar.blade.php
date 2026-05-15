@@ -2,15 +2,22 @@
     /* Memastikan pembungkus sidebar selalu setinggi layar */
     .main-sidebar {
         min-height: 100vh !important;
-        position: fixed; /* Opsional: Agar sidebar tetap diam saat konten di-scroll */
+        position: fixed; 
     }
 </style>
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <a href="{{ url('/') }}" class="brand-link">
-    <img src="{{ asset('adminlte/dist/img/AdminLTELogo.png') }}" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-    <span class="brand-text font-weight-light">PWL starter code</span>
-  </a>
+    @if(Auth::check() && Auth::user()->image)
+        <img src="{{ asset('storage/photos/' . Auth::user()->image) }}" 
+             class="brand-image img-circle elevation-3" 
+             style="opacity: .8; width: 33px; height: 33px; object-fit: cover;"
+             onerror="this.src='{{ asset('adminlte/dist/img/AdminLTELogo.png') }}';">
+    @else
+        <img src="{{ asset('adminlte/dist/img/AdminLTELogo.png') }}" class="brand-image img-circle elevation-3">
+    @endif
+    <span class="brand-text font-weight-light">{{ Auth::user()->nama }}</span>
+</a>
 
   <div class="sidebar">
     <div class="form-inline mt-3">
@@ -27,78 +34,57 @@
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item">
-          <a href="{{ url('/') }}" class="nav-link {{ ($activemenu == 'dasboard') ? 'active' : '' }}">
+          <a href="{{ url('/') }}" class="nav-link {{ ($activemenu == 'dashboard') ? 'active' : '' }}">
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>Dashboard</p>
           </a>
         </li>
 
-        <li class="nav-header">data pengguna</li>
+        <li class="nav-header">Data Pengguna</li>
         <li class="nav-item">
           <a href="{{ url('/level') }}" class="nav-link {{ ($activemenu == 'level') ? 'active' : '' }}">
             <i class="nav-icon fas fa-layer-group"></i>
-            <p>
-              level user
-              <span class="right badge badge-danger"></span>
-            </p>
+            <p>Level User</p>
           </a>
         </li>
         <li class="nav-item">
           <a href="{{ url('/user') }}" class="nav-link {{ ($activemenu == 'user') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-copy"></i>
-            <p>
-              Data user
-              <span class="badge badge-info right"></span>
-            </p>
+            <i class="nav-icon fas fa-users"></i> {{-- Icon diganti ke users lebih cocok --}}
+            <p>Data User</p>
           </a>
         </li>
 
-        <li class="nav-header">Data barang</li>
+        <li class="nav-header">Data Barang</li>
         <li class="nav-item">
           <a href="{{ url('/kategori') }}" class="nav-link {{ ($activemenu == 'kategori') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-copy"></i>
-            <p>
-              Kategori barang
-              <span class="badge badge-info right"></span>
-            </p>
+            <i class="nav-icon fas fa-tags"></i> {{-- Icon diganti ke tags --}}
+            <p>Kategori Barang</p>
           </a>
         </li>
         <li class="nav-item">
           <a href="{{ url('/barang') }}" class="nav-link {{ ($activemenu == 'barang') ? 'active' : '' }}">
             <i class="nav-icon fas fa-boxes"></i>
-            <p>
-              Data barang
-              <span class="badge badge-info right"></span>
-            </p>
+            <p>Data Barang</p>
           </a>
         </li>
         <li class="nav-item">
           <a href="{{ url('/supplier') }}" class="nav-link {{ ($activemenu == 'supplier') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-copy"></i>
-            <p>
-              Data suplier
-              <span class="badge badge-info right"></span>
-            </p>
+            <i class="nav-icon fas fa-truck"></i> {{-- Icon diganti ke truck --}}
+            <p>Data Supplier</p>
           </a>
         </li>
 
-        <li class="nav-header">data transaksi</li>
+        <li class="nav-header">Data Transaksi</li>
         <li class="nav-item">
           <a href="{{ url('/stok') }}" class="nav-link {{ ($activemenu == 'stok') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-box"></i>
-            <p>
-              stok barang
-              <span class="badge badge-info right"></span>
-            </p>
+            <i class="nav-icon fas fa-clipboard-list"></i>
+            <p>Stok Barang</p>
           </a>
         </li>
         <li class="nav-item">
           <a href="{{ url('/penjualan') }}" class="nav-link {{ ($activemenu == 'penjualan') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-copy"></i>
-            <p>
-              transaksi penjualan
-              <span class="badge badge-info right"></span>
-            </p>
+            <i class="nav-icon fas fa-cash-register"></i>
+            <p>Transaksi Penjualan</p>
           </a>
         </li>
       </ul>    

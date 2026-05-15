@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\baragController;
 use App\Http\Controllers\HomePage;
 use App\Http\Controllers\kategoricontroller;
+use App\Http\Controllers\layouts;
 use App\Http\Controllers\levelcontroller;
 use App\Http\Controllers\Product;
 use App\Http\Controllers\ProductPage;
@@ -26,6 +27,8 @@ Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
 Route::middleware(['auth'])->group(function(){
 
 
+Route::get('/', [layouts::class, 'index']);
+
 Route::group(['prefix' => 'user'], function() {
     Route::post('/list', [UserPage::class,  'list']);
     Route::get('/', [UserPage::class,  'index']);
@@ -34,6 +37,8 @@ Route::group(['prefix' => 'user'], function() {
     Route::post('/', [UserPage::class,  'store']);
     Route::get('/create_ajax', [UserPage::class,  'createAjax']);
     Route::post('/store_ajax', [UserPage::class,  'storeAjax']);
+    Route::get('/import_foto', [UserPage::class, 'importFoto']);
+    Route::post('/store_foto', [UserPage::class, 'storeFoto']);
     Route::get('/{id}', [UserPage::class,  'show']);
     Route::get('/{id}/show_ajax', [UserPage::class,  'showAjax']);
     Route::get('/{id}/edit', [UserPage::class,  'edit']);
@@ -77,7 +82,7 @@ Route::group(['prefix' => 'barang'], function(){
     Route::post('/import_ajax', [baragController::class, 'importAjax']);
     Route::get('/export_excel', [baragController::class, 'exportExcel']);
      Route::get('/export_pdf', [baragController::class, 'exportPdf']);
-    Route::get('/{id}/show_ajax', [baragController::class,  'showAjax']);
+    Route::get('/{id}/show_ajax', [baragController::class,  'showAjax']); 
     Route::get('/{id}/edit_ajax', [baragController::class, 'editAjax']);
     Route::put('/{id}/update_ajax', [baragController::class, 'updateAjax']);
     Route::get('/{id}/confirmDeleteAjax', [baragController::class,  'confirmDeleteAjax']);
