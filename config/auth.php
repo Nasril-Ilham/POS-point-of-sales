@@ -46,6 +46,8 @@ return [
         ],
     ],
 
+
+
     /*
     |--------------------------------------------------------------------------
     | User Providers
@@ -73,6 +75,9 @@ return [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
+
+            // provider ini untuk menghubungkan model usermodel dengan auth laravel,
+    //  dan habis itu kita panggil di controller auth dengan menggunakan Auth::attempt() untuk login dan Auth::user() untuk mendapatkan data user yang sedang login
     ],
 
     /*

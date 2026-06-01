@@ -11,6 +11,7 @@ use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Validator;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class baragController extends Controller
 {
@@ -44,9 +45,12 @@ class baragController extends Controller
             ->addIndexColumn()
             ->addColumn('aksi', function($barang){
             $btn = '<button onclick="modelAction(\''.url('/barang/'.$barang->barang_id.'/show_ajax').'\')" class="btn btn-sm btn-primary">Detail</button> ';
+
+            if (Auth::check() && Auth::user()->getRole() == 'LVL001') {
             $btn .= '<button onclick="modelAction(\''.url('/barang/'.$barang->barang_id.'/edit_ajax').'\')" class="btn btn-sm btn-info">Edit</button> ';
             $btn .= '<button onclick="modelAction(\''.url('/barang/'.$barang->barang_id.'/confirmDeleteAjax').'\')" class="btn btn-sm btn-danger">Hapus</button>';
 
+            };
                 return $btn;
             })
             ->rawColumns(['aksi'])

@@ -16,7 +16,6 @@ use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/', [WelcomeController::class, 'index']);
 
 Route::pattern('id','[0-9]+');
 
@@ -27,7 +26,9 @@ Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
 Route::middleware(['auth'])->group(function(){
 
 
-Route::get('/', [layouts::class, 'index']);
+Route::get('/', [WelcomeController::class, 'index']);
+
+Route::get('/photo', [layouts::class, 'index']);
 
 Route::group(['prefix' => 'user'], function() {
     Route::post('/list', [UserPage::class,  'list']);
@@ -50,6 +51,8 @@ Route::group(['prefix' => 'user'], function() {
     Route::delete('/{id}', [UserPage::class,  'destroy']);
 });
 
+// 'middleware' => 'authorize:LVL001' untuk membatasi akses hanya untuk pengguna dengan level tertentu (misalnya, LVL001)
+// middleware ini mengambil dari controler middleware dan file AuthorizeUser. php 
 Route::group(['prefix' => 'level', 'middleware' => 'authorize:LVL001'], function() {
     Route::get('/create_ajax', [levelcontroller::class,  'createAjax']);
     Route::post('/store_ajax', [levelcontroller::class,  'storeAjax']);
@@ -70,29 +73,39 @@ Route::group(['prefix' => 'level', 'middleware' => 'authorize:LVL001'], function
     Route::delete('/{id}/destroyAjax', [levelcontroller::class,  'destroyAjax']);
 });
 
+// authorize untuk hanya admin yang bisa CRUD
 
 Route::group(['prefix' => 'barang'], function(){
-    Route::get('/create_ajax', [baragController::class,  'createAjax']);
-    Route::post('/store_ajax', [baragController::class,  'storeAjax']);
+
+Route::group(['middleware' => 'authorize:LVL002,LVL001'], function() {
     Route::get('/', [baragController::class,  'index']);
     Route::post('/list', [baragController::class,  'list']);
+    Route::get('/{id}/show_ajax', [baragController::class,  'showAjax']); 
+    Route::get('/{id}', [baragController::class,  'show']);
+
+});
+
+Route::group(['middleware' => 'authorize:LVL001'], function() {
+
+    Route::get('/create_ajax', [baragController::class,  'createAjax']);
+    Route::post('/store_ajax', [baragController::class,  'storeAjax']);
     Route::get('/create', [baragController::class,  'create']);
     Route::post('/', [baragController::class,  'store']);
     Route::get('/import', [baragController::class, 'import']);
     Route::post('/import_ajax', [baragController::class, 'importAjax']);
     Route::get('/export_excel', [baragController::class, 'exportExcel']);
-     Route::get('/export_pdf', [baragController::class, 'exportPdf']);
-    Route::get('/{id}/show_ajax', [baragController::class,  'showAjax']); 
+    Route::get('/export_pdf', [baragController::class, 'exportPdf']);
     Route::get('/{id}/edit_ajax', [baragController::class, 'editAjax']);
     Route::put('/{id}/update_ajax', [baragController::class, 'updateAjax']);
     Route::get('/{id}/confirmDeleteAjax', [baragController::class,  'confirmDeleteAjax']);
     Route::delete('/{id}/destroyAjax', [baragController::class,  'destroyAjax']);
-    Route::get('/{id}', [baragController::class,  'show']);
     Route::get('/{id}/edit', [baragController::class,  'edit']);
     Route::put('/{id}', [baragController::class,  'update']);
     Route::delete('/{id}', [baragController::class,  'destroy']);
+    
 });
 
+});
 
 
 Route::group(['prefix' => 'kategori', 'middleware' => 'authorize:LVL002,LVL001'], function(){

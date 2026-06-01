@@ -15,7 +15,7 @@ class usermodel extends Authenticatable
     protected $primaryKey = 'user_id';
     public $timestamps = true;
 
-    protected $fillable = ['level_id', 'username', 'nama', 'password', 'image'];
+    protected $fillable = ['level_id', 'user_nama', 'nama', 'password', 'image'];
 
     /**
      * Beritahu Laravel bahwa field untuk username adalah 'user_nama'
