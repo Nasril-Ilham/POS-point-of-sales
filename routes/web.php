@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductPage;
 use App\Http\Controllers\StokController;
 use App\Http\Controllers\SupliermodelController;
 use App\Http\Controllers\Transaction;
+use App\Http\Controllers\penjualan;
 use App\Http\Controllers\UserPage;
 use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
@@ -161,6 +162,19 @@ Route::group(['prefix' => 'supplier'], function(){
     Route::get('/{id}/edit', [SupliermodelController::class,  'edit']);
     Route::put('/{id}', [SupliermodelController::class,  'update']);
     Route::delete('/{id}', [SupliermodelController::class,  'destroy']);
+});
+
+
+Route::group(['prefix' => 'penjualan'], function(){
+    Route::get('/', [penjualan::class,  'index']);
+     Route::post('/list', [penjualan::class,  'list']);
+     Route::get('/create', [penjualan::class,  'create']);
+     Route::post('/', [penjualan::class,  'store']);
+     Route::get('/{id}', [penjualan::class,  'show']);
+     Route::get('/{id}/edit', [penjualan::class,  'edit']);
+     Route::put('/{id}', [penjualan::class,  'update']);
+     Route::delete('/{id}', [penjualan::class,  'destroy']);
+
 });
 
 

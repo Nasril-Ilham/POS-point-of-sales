@@ -1,4 +1,4 @@
-@extends('layouts.template')
+
 
 @section('content')
     <h1>data informasi untuk level</h1>

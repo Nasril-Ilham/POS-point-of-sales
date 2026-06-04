@@ -67,4 +67,9 @@ class usermodel extends Authenticatable
     {
         return $this->hasMany(stockmodel::class, 'user_id', 'user_id');
     }
+
+    public function penjualan(): HasMany
+    {
+        return $this->hasMany(penjualanmodel::class, 'user_id', 'user_id');
+    }
 }

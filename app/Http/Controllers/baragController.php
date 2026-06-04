@@ -34,8 +34,7 @@ class baragController extends Controller
 
     public function list(Request $request)
     {
-        $barang = barangmodel::select('barang_id', 'barang_nama', 'kategori_id', 'barang_kode', 'harga_jual', 'harga_beli')
-            ->with('kategori');
+        $barang = barangmodel::with('kategori')->select('*');
 
         if($request->barang_id){
             $barang->where('barang_id', $request->barang_id);
@@ -47,6 +46,7 @@ class baragController extends Controller
             $btn = '<button onclick="modelAction(\''.url('/barang/'.$barang->barang_id.'/show_ajax').'\')" class="btn btn-sm btn-primary">Detail</button> ';
 
             if (Auth::check() && Auth::user()->getRole() == 'LVL001') {
+
             $btn .= '<button onclick="modelAction(\''.url('/barang/'.$barang->barang_id.'/edit_ajax').'\')" class="btn btn-sm btn-info">Edit</button> ';
             $btn .= '<button onclick="modelAction(\''.url('/barang/'.$barang->barang_id.'/confirmDeleteAjax').'\')" class="btn btn-sm btn-danger">Hapus</button>';
 
