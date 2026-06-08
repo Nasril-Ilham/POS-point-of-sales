@@ -22,10 +22,14 @@ Route::pattern('id','[0-9]+');
 
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
-Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
+
+// ini bisa di masukkan ke group di bawah karna sama sama membutuhkan auth
+// Route::get('logout', [AuthController::class, 'logout'])->middleware('auth');
 
 Route::middleware(['auth'])->group(function(){
 
+// seperti ini 
+Route::get('logout', [AuthController::class, 'logout']);
 
 Route::get('/', [WelcomeController::class, 'index']);
 
@@ -168,12 +172,13 @@ Route::group(['prefix' => 'supplier'], function(){
 Route::group(['prefix' => 'penjualan'], function(){
     Route::get('/', [penjualan::class,  'index']);
      Route::post('/list', [penjualan::class,  'list']);
-     Route::get('/create', [penjualan::class,  'create']);
-     Route::post('/', [penjualan::class,  'store']);
-     Route::get('/{id}', [penjualan::class,  'show']);
-     Route::get('/{id}/edit', [penjualan::class,  'edit']);
-     Route::put('/{id}', [penjualan::class,  'update']);
-     Route::delete('/{id}', [penjualan::class,  'destroy']);
+     Route::get('/create', [penjualan::class,  'createAjax']);
+     Route::post('/store', [penjualan::class,  'storeAjax']);
+     Route::get('/{id}/show', [penjualan::class,  'showAjax']);
+     Route::get('/{id}/edit', [penjualan::class,  'editAjax']);
+     Route::put('/{id}/update', [penjualan::class,  'updateAjax']);
+    Route::get('/{id}/confirmDelete', [penjualan::class,  'confirmDeleteAjax']);
+     Route::delete('/{id}/destroy', [penjualan::class,  'destroyAjax']);
 
 });
 

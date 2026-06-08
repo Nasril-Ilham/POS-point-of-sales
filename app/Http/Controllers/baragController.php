@@ -40,6 +40,7 @@ class baragController extends Controller
             $barang->where('barang_id', $request->barang_id);
         }
 
+        // ini datatabel yang akan di ambil oleh index.blade.php untuk menampilkan data secara ajax
         return DataTables::of($barang)
             ->addIndexColumn()
             ->addColumn('aksi', function($barang){

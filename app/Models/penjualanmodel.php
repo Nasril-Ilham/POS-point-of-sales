@@ -8,7 +8,7 @@ class penjualanmodel extends Model
 {
     protected $table = 't_penjualan';
     protected $primaryKey = 'penjualan_id';
-    protected $fillable = ['penjualan_tanggal', 'total_penjualan', 'user_id', 'pembeli', 'penjualan_kode'];
+    protected $fillable = ['penjualan_tanggal', 'user_id', 'pembeli', 'penjualan_kode'];
 
     public function user()
     {

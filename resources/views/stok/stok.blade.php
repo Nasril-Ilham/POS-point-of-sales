@@ -88,6 +88,7 @@
     $(document).ready(function() {
         dataStok = $('#table_stok').DataTable({
             serverSide: true,
+            processing: true,
             ajax: {
                 "url": "{{ url('stok/list') }}",
                 "dataType": "json",
@@ -99,6 +100,7 @@
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 }
             },
+            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>t<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
             columns: [
                 {
                     data: "DT_RowIndex",

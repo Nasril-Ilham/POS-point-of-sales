@@ -38,12 +38,25 @@ class StokController extends Controller
         $stok = stockmodel::select('stok_id', 'supplier_id', 'kategori_id', 'user_id', 'stok_tanggal', 'stok_jumlah')
             ->with('supplier', 'kategori', 'user');
 
+        // Filter berdasarkan kategori
         if($request->kategori_id){
             $stok->where('kategori_id', $request->kategori_id);
         }
 
-        if($request->stok_id){
-            $stok->where('stok_id', $request->stok_id);
+        // Pencarian berdasarkan search input dari DataTables
+        $search = $request->input('search.value');
+        if($search){
+            $stok->whereHas('supplier', function($query) use ($search){
+                    $query->where('supplier_nama', 'like', '%'.$search.'%');
+                })
+                ->orWhereHas('kategori', function($query) use ($search){
+                    $query->where('kategori_nama', 'like', '%'.$search.'%');
+                })
+                ->orWhereHas('user', function($query) use ($search){
+                    $query->where('user_nama', 'like', '%'.$search.'%');
+                })
+                ->orWhere('stok_tanggal', 'like', '%'.$search.'%')
+                ->orWhere('stok_jumlah', 'like', '%'.$search.'%');
         }
 
         return DataTables::of($stok)
