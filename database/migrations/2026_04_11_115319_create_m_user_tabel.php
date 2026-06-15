@@ -28,6 +28,8 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
+    // maksud dari fungsi down() adalah untuk menghapus tabel m_user jika terjadi rollback pada migrasi. Dengan menggunakan Schema::dropIfExists('m_user'), kita memastikan bahwa tabel m_user akan dihapus jika ada, sehingga menjaga kebersihan database saat melakukan rollback.
+    
     public function down(): void
     {
         Schema::dropIfExists('m_user');

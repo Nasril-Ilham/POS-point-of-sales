@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::pattern('id','[0-9]+');
 
+// karna ini tidak dalam auth maka ini langsung di akses di browser ketika kita pake localhost:8000/
 Route::get('login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'postlogin']);
 

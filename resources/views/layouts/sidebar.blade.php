@@ -50,6 +50,7 @@
                         <p>Level User</p>
                     </a>
                 </li>
+                
                 <li class="nav-item">
                     <a href="{{ url('/user') }}"
                         class="nav-link {{ isset($activemenu) && $activemenu == 'user' ? 'active' : '' }}">
