@@ -16,7 +16,10 @@
                         <i class="fas fa-plus"></i> Tambah (Ajax)
                     </button>
                     <a href="{{ url('barang/export_pdf') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export
-                        Barang</a>
+                        Barang pdf</a>
+                     <a href="{{ url('barang/export_excel') }}" class="btn btn-warning"><i class="fa fa-file-pdf"></i> Export
+                        Barang excel</a>
+
                         
             @endif
             </div>
